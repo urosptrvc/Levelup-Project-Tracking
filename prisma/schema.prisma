@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model shipments {
+  id               Int       @id @default(autoincrement()) // Automatski inkrement
+  Carrier          String
+  status           String?
+  house_awb        String?
+  shipper          String?
+  shipper_country  String?
+  receiver         String?
+  receiver_country String?
+  po_number        String?
+  carrier          String?
+  packages         Int?
+  weight           Float?
+  volume           Float?
+  etd              DateTime?
+  eta              DateTime?
+  atd              DateTime?
+  ata              DateTime?
+  vessel_flight    String?
+  created_at       DateTime? @default(now())
+  updated_at       DateTime? @updatedAt
+  pickup_date      DateTime?
+  latest_cp        String?
+  shipper_ref_no   String?
+  inco_term        String?
+
+  @@map("shipments") // Mapa prema tabeli shipments
+}
