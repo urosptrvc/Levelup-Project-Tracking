@@ -70,12 +70,35 @@ export default function UploadShipmentsPage() {
                 notifyError("Sheet Error", "Invalid or missing sheet in the Excel file!")
                 return
             }
+            // Specifična pravila za Hellmann i DHL
+            if (carrierType === "hellmann") {
+                const range = XLSX.utils.decode_range(worksheet["!ref"] || "");
+                range.s.r = 2; // Treći red
+                range.s.c = 1; // Druga kolona
+                worksheet["!ref"] = XLSX.utils.encode_range(range);
+            } else if (carrierType === "dhl") {
+                const range = XLSX.utils.decode_range(worksheet["!ref"] || "");
+                range.s.r = 11; // 12. red (indeksirano od 0)
+                range.s.c = 0;  // Prva kolona
+                worksheet["!ref"] = XLSX.utils.encode_range(range);
+            }
 
-            const rawData: any[] = XLSX.utils.sheet_to_json(worksheet)
+            const rawData: any[] = XLSX.utils.sheet_to_json(worksheet);
+
+            // Čisti sve vrednosti i uklanja `\n`
+            const cleanData = rawData.map((row) =>
+                Object.fromEntries(
+                    Object.entries(row).map(([key, value]) => [
+                        key.replace(/\n/g, " ").trim(), // Očisti imena kolona
+                        typeof value === "string" ? value.replace(/\n/g, " ").trim() : value, // Očisti vrednosti
+                    ])
+                )
+            );
+
             const mapping = carrierMappings[carrierType]
             console.log(mapping);
             // Formatiramo podatke prema shipments modelu
-            const formattedData = rawData.map((row) => ({
+            const formattedData = cleanData.map((row) => ({
                 carrier_type: mapping.carriertypes,
                 status: row[mapping.status] || "-",
                 po_number: mapping.po_number ? row[mapping.po_number] || "-" : null,

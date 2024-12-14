@@ -4,15 +4,14 @@ import type { Metadata } from "next"
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-    title: "Shipments App",
-    description: "Next.js + Prisma + Toast example",
+    title: "The Track Meister",
+    description: "Levelup Project Tracking Mapping Data",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
         <body>
-        {/* Toast mora biti na nivou root layout-a */}
         <Toaster />
         {children}
         </body>
