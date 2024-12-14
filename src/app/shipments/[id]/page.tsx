@@ -25,6 +25,29 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
             </div>
         )
     }
+    function formatDate(date: Date | null): string {
+        if (!date) return "-"; // Ako datum ne postoji, vrati "-"
+
+        // Provera za "Self-Delivery" - fiksni datum iz 1900
+        if (date.getFullYear() === 1900 && date.getMonth() === 0 && date.getDate() === 1) {
+            return "Self-Delivery";
+        }
+
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+
+        // Provera ako su sati, minuti i sekunde nula
+        if (date.getHours() === 0 && date.getMinutes() === 0 && date.getSeconds() === 0) {
+            return `${day}.${month}.${year}`; // Prikazuje samo datum
+        }
+
+        // U suprotnom, prikazuje datum i vreme
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        return `${day}.${month}.${year} ${hours}:${minutes}`;
+    }
+
 
     return (
         <div className="container mx-auto py-10">
@@ -42,7 +65,7 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                 <TableBody>
                     <TableRow>
                         <TableCell>Carrier</TableCell>
-                        <TableCell>{shipment.carrier_type}</TableCell>
+                        <TableCell>{shipment.carrier_type || "-"}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Status</TableCell>
@@ -77,14 +100,43 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                         <TableCell>{shipment.volume ?? 0}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>ETA</TableCell>
-                        <TableCell>{shipment.eta?.toISOString() || "-"}</TableCell>
+                        <TableCell>ETA (Estimated Time of Arrival)</TableCell>
+                        <TableCell>{formatDate(shipment.eta)}</TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell>ETD</TableCell>
-                        <TableCell>{shipment.etd?.toISOString() || "-"}</TableCell>
+                        <TableCell>ETD (Estimated Time of Departure)</TableCell>
+                        <TableCell>{formatDate(shipment.etd)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>ATD (Actual Time of Departure)</TableCell>
+                        <TableCell>{formatDate(shipment.atd)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>ATA (Actual Time of Arrival)</TableCell>
+                        <TableCell>{formatDate(shipment.ata)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Vessel/Flight</TableCell>
+                        <TableCell>{shipment.vessel_flight || "-"}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Pickup Date</TableCell>
+                        <TableCell>{formatDate(shipment.pickup_date)}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Latest CP</TableCell>
+                        <TableCell>{shipment.latest_cp || "-"}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Shipper Ref No</TableCell>
+                        <TableCell>{shipment.shipper_ref_no || "-"}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell>Inco Term</TableCell>
+                        <TableCell>{shipment.inco_term || "-"}</TableCell>
                     </TableRow>
                 </TableBody>
+
             </Table>
         </div>
     )

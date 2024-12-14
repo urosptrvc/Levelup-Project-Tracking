@@ -25,8 +25,8 @@ model shipments {
   po_number        String?
   carrier          String?
   packages         Int?
-  weight           Float?
-  volume           Float?
+  weight           String?
+  volume           String?
   etd              DateTime?
   eta              DateTime?
   atd              DateTime?

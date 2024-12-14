@@ -80,48 +80,100 @@ export default function UploadShipmentsPage() {
                 const range = XLSX.utils.decode_range(worksheet["!ref"] || "");
                 range.s.r = 11; // 12. red (indeksirano od 0)
                 range.s.c = 0;  // Prva kolona
+                range.e.c = 20; // 21. kolona (indeksirano od 0)
                 worksheet["!ref"] = XLSX.utils.encode_range(range);
             }
 
             const rawData: any[] = XLSX.utils.sheet_to_json(worksheet);
-
-            // Čisti sve vrednosti i uklanja `\n`
-            const cleanData = rawData.map((row) =>
-                Object.fromEntries(
-                    Object.entries(row).map(([key, value]) => [
-                        key.replace(/\n/g, " ").trim(), // Očisti imena kolona
-                        typeof value === "string" ? value.replace(/\n/g, " ").trim() : value, // Očisti vrednosti
-                    ])
-                )
-            );
-
+            console.log(JSON.stringify(rawData, null, 2)); //Ovde vidimo kako se \n zapravo prenosi
             const mapping = carrierMappings[carrierType]
-            console.log(mapping);
+            console.log("RAW DATA:", JSON.stringify(rawData, null, 2));
+
+            // FIX BIGTIME //
+            function normalizeKeys(data: any[]): any[] {
+                return data.map((row) => {
+                    const normalizedRow: any = {};
+                    Object.keys(row).forEach((key) => {
+                        const normalizedKey = key.replace(/\r\n/g, " ").trim(); // Zamena \r\n sa space
+                        normalizedRow[normalizedKey] = row[key];
+                    });
+                    return normalizedRow;
+                });
+            }
+            const normalizedData = normalizeKeys(rawData);
+            console.log("Normalized Data:", JSON.stringify(normalizedData, null, 2));
+
+
+            // FIX ZA DATUME //
+
+            function parseDateString(value: any): string | null {
+                // Ako je vrednost prazna ili falsy
+                if (!value) {
+                    return null;
+                }
+
+                // Ako je vrednost string i ima specifične invalidne formate
+                if (typeof value === "string") {
+                    const invalidFormats = ["self-delivery"];
+                    if (invalidFormats.includes(value.trim().toLowerCase())) {
+                        // Ako je "Self-Delivery", vrati fiksni datum iz 1900
+                        return new Date(Date.UTC(1900, 0, 1, 0, 0, 0)).toISOString(); // 1900-01-01T00:00:00.000Z
+                    }
+                    const parsedDate = Date.parse(value);
+                    if (!isNaN(parsedDate)) {
+                        const date = new Date(parsedDate);
+                        // Ako u string datumu nema vremena, dodaj 00:00:00
+                        date.setUTCHours(0, 0, 0, 0);
+                        return date.toISOString();
+                    }
+                    return null; // Ako string nije validan datum
+                }
+
+                // Ako je vrednost broj (Excel datum format)
+                if (typeof value === "number") {
+                    const excelEpoch = new Date(1899, 11, 30).getTime(); // Excel epoha
+                    const dateTimeInMs = excelEpoch + value * 24 * 60 * 60 * 1000;
+                    const date = new Date(dateTimeInMs);
+                    // Postavi vreme na 00:00:00 ako ne postoji
+                    date.setUTCHours(0, 0, 0, 0);
+                    return date.toISOString(); // ISO-8601 format
+                }
+
+                // Ako nije ni string ni broj, vrati null
+                return null;
+            }
+
+
+            // FIX ZA DATUME //
+
+
             // Formatiramo podatke prema shipments modelu
-            const formattedData = cleanData.map((row) => ({
+            const formattedData = normalizedData.map((row) => ({
                 carrier_type: mapping.carriertypes,
-                status: row[mapping.status] || "-",
-                po_number: mapping.po_number ? row[mapping.po_number] || "-" : null,
-                eta: row[mapping.eta] ? new Date(row[mapping.eta]).toISOString() : null,
-                ata: row[mapping.ata] ? new Date(row[mapping.ata]).toISOString() : null,
-                etd: row[mapping.etd] ? new Date(row[mapping.etd]).toISOString() : null,
-                atd: row[mapping.atd] ? new Date(row[mapping.atd]).toISOString() : null,
-                packages: row[mapping.packages] || 0,
-                weight: row[mapping.weight] || 0,
-                volume: row[mapping.volume] || 0,
-                shipper: row[mapping.shipper] || "-",
-                shipper_country: row[mapping.shipper_country] || "-",
-                receiver: row[mapping.receiver] || "-",
-                receiver_country: row[mapping.receiver_country] || "-",
-                house_awb: row[mapping.house_awb] || "-",
-                shipper_ref_no: String(row[mapping.shipper_ref_no] || "-"),
-                carrier: row[mapping.carrier] || carrierType, // default fallback
-                inco_term: row[mapping.inco_term] || "-",
-                vessel_flight: row[mapping.vessel_flight] || "-",
-                pickup_date: row[mapping.pickup_date] ? new Date(row[mapping.pickup_date]).toISOString() : null,
-                latest_cp: row[mapping.latest_cp] || "-",
+                status: String(row[mapping.status]) || "-",
+                po_number: String(mapping.po_number),
+                eta: parseDateString(row[mapping.eta]),
+                ata: parseDateString(row[mapping.ata]),
+                etd: parseDateString(row[mapping.etd]),
+                atd: parseDateString(row[mapping.atd]),
+                packages: row[mapping.packages] || "-",
+                weight: String(row[mapping.weight]) || "-",
+                volume: String(row[mapping.volume]) || "-",
+                shipper: String(row[mapping.shipper]) || "-",
+                shipper_country: String(row[mapping.shipper_country]) || "-",
+                receiver: String(row[mapping.receiver]) || "-",
+                receiver_country: String(row[mapping.receiver_country]) || "-",
+                house_awb: String(row[mapping.house_awb]) || "-",
+                shipper_ref_no: String(row[mapping.shipper_ref_no]) || "-",
+                carrier: String(row[mapping.carrier]) || "-", // default fallback
+                inco_term: String(row[mapping.inco_term]) || "-",
+                vessel_flight: String(row[mapping.vessel_flight]) || "-",
+                pickup_date: parseDateString(row[mapping.pickup_date]),
+                latest_cp: String(row[mapping.latest_cp]) || "-",
             }))
-            console.log("formattedData:", formattedData)
+
+            const invalidEntries = formattedData.filter((item) => Object.keys(item).length === 0);
+            console.log("Invalid Entries Count:", invalidEntries.length);
             // Sada JSON sa `formattedData` šaljemo server route-u
             const res = await fetch("/api/shipments/upload", {
                 method: "POST",
