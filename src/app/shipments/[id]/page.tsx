@@ -93,11 +93,11 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                     </TableRow>
                     <TableRow>
                         <TableCell>Weight</TableCell>
-                        <TableCell>{shipment.weight ?? 0}</TableCell>
+                        <TableCell>{shipment.weight || "-"}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Volume</TableCell>
-                        <TableCell>{shipment.volume ?? 0}</TableCell>
+                        <TableCell>{shipment.volume || "-"}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>ETA (Estimated Time of Arrival)</TableCell>

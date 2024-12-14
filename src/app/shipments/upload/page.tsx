@@ -85,11 +85,9 @@ export default function UploadShipmentsPage() {
             }
 
             const rawData: any[] = XLSX.utils.sheet_to_json(worksheet);
-            console.log(JSON.stringify(rawData, null, 2)); //Ovde vidimo kako se \n zapravo prenosi
             const mapping = carrierMappings[carrierType]
-            console.log("RAW DATA:", JSON.stringify(rawData, null, 2));
 
-            // FIX BIGTIME //
+            // FIX ZA \r\n //
             function normalizeKeys(data: any[]): any[] {
                 return data.map((row) => {
                     const normalizedRow: any = {};
@@ -101,8 +99,6 @@ export default function UploadShipmentsPage() {
                 });
             }
             const normalizedData = normalizeKeys(rawData);
-            console.log("Normalized Data:", JSON.stringify(normalizedData, null, 2));
-
 
             // FIX ZA DATUME //
 
@@ -165,15 +161,14 @@ export default function UploadShipmentsPage() {
                 receiver_country: String(row[mapping.receiver_country]) || "-",
                 house_awb: String(row[mapping.house_awb]) || "-",
                 shipper_ref_no: String(row[mapping.shipper_ref_no]) || "-",
-                carrier: String(row[mapping.carrier]) || "-", // default fallback
+                carrier: String(row[mapping.carrier]) || "-",
                 inco_term: String(row[mapping.inco_term]) || "-",
                 vessel_flight: String(row[mapping.vessel_flight]) || "-",
                 pickup_date: parseDateString(row[mapping.pickup_date]),
                 latest_cp: String(row[mapping.latest_cp]) || "-",
             }))
 
-            const invalidEntries = formattedData.filter((item) => Object.keys(item).length === 0);
-            console.log("Invalid Entries Count:", invalidEntries.length);
+            console.log("Invalid Entries Count:", JSON.stringify({ data: formattedData }));
             // Sada JSON sa `formattedData` šaljemo server route-u
             const res = await fetch("/api/shipments/upload", {
                 method: "POST",
