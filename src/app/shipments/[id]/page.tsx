@@ -9,15 +9,12 @@ import {
 } from "@/components/ui/table"
 import Link from "next/link";
 
-interface ShipmentPageProps {
-    params: { id: number }
-}
 
-export default async function ShipmentDetailPage({ params }: ShipmentPageProps) {
+export default async function ShipmentDetailPage({ params }: { params: { id: number } }) {
     const shipment = await prisma.shipments.findUnique({
         where: { id: Number(params.id) },
     })
-
+    //Provera da li je pronadjen shipment po ID koji je prosledjen.
     if (!shipment) {
         return (
             <div className="container mx-auto py-10">
@@ -25,6 +22,8 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
             </div>
         )
     }
+
+    // Funkcija za formatiranje datuma iz MySQL ISO-8601 u citljiv i razuman format
     function formatDate(date: Date | null): string {
         if (!date) return "Not Defined"; // Ako datum ne postoji, vrati "-"
 
@@ -50,9 +49,9 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
 
     function removeQuotes(value: any): string {
         if (typeof value === "string") {
-            return value.replace(/"/g, ""); // Uklanja sve znakove `"`
+            return value.replace(/"/g, ""); // Uklanja sve znakove `"`, ovo nam treba jer smo mapirali sve kao stringove
         }
-        return value; // Ako nije string, vrati vrednost kako jeste
+        return value; // Ako nije string, vraca vrednost kako jeste
     }
 
 

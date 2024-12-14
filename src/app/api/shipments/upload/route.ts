@@ -3,6 +3,8 @@ import * as XLSX from "xlsx";
 import { prisma } from "@/lib/prisma";
 import { carrierMappings } from "@/app/lib/carrierMappings";
 
+
+//UPLOAD PAGE ROUTING
 export async function POST(request: Request) {
     try {
         const formData = await request.formData();
@@ -50,38 +52,35 @@ export async function POST(request: Request) {
         const mapping = carrierMappings[carrierType]
 
 
-        // FIX ZA \r\n //
-        function normalizeKeys(data: any[]): any[] {
-            return data.map((row) => {
-                const normalizedRow: any = {};
-                Object.keys(row).forEach((key) => {
-                    const normalizedKey = key.replace(/\r\n/g, " ").trim(); // Zamena \r\n sa space
-                    normalizedRow[normalizedKey] = row[key];
-                });
-                return normalizedRow;
+        // Resavanje ZA \r\n//
+        const normalizeKeys = (data: any[]): any[] => data.map((row) => {
+            const normalizedRow: any = {};
+            Object.keys(row).forEach((key) => {
+                const normalizedKey = key.replace(/\r\n/g, " ").trim(); // Zamena \r\n sa space
+                normalizedRow[normalizedKey] = row[key];
             });
-        }
+            return normalizedRow;
+        });
         const normalizedData = normalizeKeys(rawData);
 
-        // FIX ZA DATUME //
+        // Fix za sve datume //
 
-        function parseDateString(value: any): string | null {
-            // Ako je vrednost prazna ili falsy
+        const parseDateString = (value: any): string | null => {
+            // Ako je vrednost prazna ili fush
             if (!value) {
                 return null;
             }
 
-            // Ako je vrednost string i ima specifične invalidne formate
+            // Ako je vrednost string i ima self-delivery
             if (typeof value === "string") {
                 const invalidFormats = ["self-delivery"];
                 if (invalidFormats.includes(value.trim().toLowerCase())) {
-                    // Ako je "Self-Delivery", vrati fiksni datum iz 1900
                     return new Date(Date.UTC(1900, 0, 1, 0, 0, 0)).toISOString(); // 1900-01-01T00:00:00.000Z
                 }
                 const parsedDate = Date.parse(value);
                 if (!isNaN(parsedDate)) {
                     const date = new Date(parsedDate);
-                    // Ako u string datumu nema vremena, dodaj 00:00:00
+                    // Ako u string datumu nema vremena, dodajemo 00:00:00
                     date.setUTCHours(0, 0, 0, 0);
                     return date.toISOString();
                 }
@@ -95,19 +94,18 @@ export async function POST(request: Request) {
                 const date = new Date(dateTimeInMs);
                 // Postavi vreme na 00:00:00 ako ne postoji
                 date.setUTCHours(0, 0, 0, 0);
-                return date.toISOString(); // ISO-8601 format
+                return date.toISOString(); // ISO-8601 format je format koji MySQL zahteva za datume
             }
 
-            // Ako nije ni string ni broj, vrati null
             return null;
-        }
-        // FIX ZA DATUME //
+        };
+        // Fix za sve datume //
 
         // Za Stingovanje numbera
 
-        function safeToString(value: any): string {
+        const safeToString = (value: any): string => {
             if (value === undefined || value === null) {
-                return "Not Defined"; // Ako je vrednost undefined ili null, vrati "-"
+                return "Not Defined"; // Ako je vrednost undefined ili null, vratice "-"
             }
 
             if (typeof value === "object" && value.toString) {
@@ -115,7 +113,7 @@ export async function POST(request: Request) {
             }
 
             return JSON.stringify(value); // Sigurno konvertovanje bilo koje vrednosti u string
-        }
+        };
 
         // Formatiranje podataka prema Prisma modelu
         const formattedData = normalizedData.map((row) => ({
