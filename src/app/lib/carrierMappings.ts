@@ -2,7 +2,7 @@ const Types: string[] = ["DHL", "Hellmann", "Logwin"];
 
 export const carrierMappings: Record<string, any> = {
     dhl: {
-        carriertypes: Types[0],
+        typesofcarriers: Types[0],
         status: "Last Checkpoint Code",
         po_number: "Shipper Reference Number",
         eta: "Estimated Delivery Date",
@@ -25,7 +25,7 @@ export const carrierMappings: Record<string, any> = {
         latest_cp: "Latest Checkpoint",
     },
     hellmann: {
-        carriertypes: Types[1],
+        typesofcarriers: Types[1],
         status: "Status",
         po_number: null,
         eta: "Flight ETA",
@@ -48,7 +48,7 @@ export const carrierMappings: Record<string, any> = {
         latest_cp: null,
     },
     logwin: {
-        carriertypes: null,
+        typesofcarriers: Types[2],
         status: "Status",
         po_number: "PO Number",
         eta: "ETA",

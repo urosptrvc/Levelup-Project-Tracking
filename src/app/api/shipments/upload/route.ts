@@ -31,61 +31,102 @@ export async function POST(request: Request) {
 
         const worksheet = workbook.Sheets[sheetName];
 
-        // Normalizacija ključeva (fix za \r\n)
+        // Specifična pravila za Hellmann i DHL
+        if (carrierType === "hellmann") {
+            const range = XLSX.utils.decode_range(worksheet["!ref"] || "");
+            range.s.r = 2; // Treći red
+            range.s.c = 1; // Druga kolona
+            worksheet["!ref"] = XLSX.utils.encode_range(range);
+        } else if (carrierType === "dhl") {
+            const range = XLSX.utils.decode_range(worksheet["!ref"] || "");
+            range.s.r = 11; // 12. red (indeksirano od 0)
+            range.s.c = 0;  // Prva kolona
+            range.e.c = 20; // 21. kolona (indeksirano od 0)
+            worksheet["!ref"] = XLSX.utils.encode_range(range);
+        }
+
+
+        const rawData: any[] = XLSX.utils.sheet_to_json(worksheet);
+        const mapping = carrierMappings[carrierType]
+
+
+        // FIX ZA \r\n //
         function normalizeKeys(data: any[]): any[] {
             return data.map((row) => {
                 const normalizedRow: any = {};
                 Object.keys(row).forEach((key) => {
-                    const normalizedKey = key.replace(/\r\n/g, " ").trim();
+                    const normalizedKey = key.replace(/\r\n/g, " ").trim(); // Zamena \r\n sa space
                     normalizedRow[normalizedKey] = row[key];
                 });
                 return normalizedRow;
             });
         }
+        const normalizedData = normalizeKeys(rawData);
 
-        // Parsiranje datuma
+        // FIX ZA DATUME //
+
         function parseDateString(value: any): string | null {
-            if (!value) return null;
+            // Ako je vrednost prazna ili falsy
+            if (!value) {
+                return null;
+            }
 
+            // Ako je vrednost string i ima specifične invalidne formate
             if (typeof value === "string") {
-                if (value.toLowerCase().includes("self-delivery")) {
-                    return new Date(Date.UTC(1900, 0, 1)).toISOString();
+                const invalidFormats = ["self-delivery"];
+                if (invalidFormats.includes(value.trim().toLowerCase())) {
+                    // Ako je "Self-Delivery", vrati fiksni datum iz 1900
+                    return new Date(Date.UTC(1900, 0, 1, 0, 0, 0)).toISOString(); // 1900-01-01T00:00:00.000Z
                 }
-                const parsed = Date.parse(value);
-                return isNaN(parsed) ? null : new Date(parsed).toISOString();
+                const parsedDate = Date.parse(value);
+                if (!isNaN(parsedDate)) {
+                    const date = new Date(parsedDate);
+                    // Ako u string datumu nema vremena, dodaj 00:00:00
+                    date.setUTCHours(0, 0, 0, 0);
+                    return date.toISOString();
+                }
+                return null; // Ako string nije validan datum
             }
 
+            // Ako je vrednost broj (Excel datum format)
             if (typeof value === "number") {
-                const excelEpoch = new Date(1899, 11, 30).getTime();
-                const date = new Date(excelEpoch + value * 86400000);
-                return date.toISOString();
+                const excelEpoch = new Date(1899, 11, 30).getTime(); // Excel epoha
+                const dateTimeInMs = excelEpoch + value * 24 * 60 * 60 * 1000;
+                const date = new Date(dateTimeInMs);
+                // Postavi vreme na 00:00:00 ako ne postoji
+                date.setUTCHours(0, 0, 0, 0);
+                return date.toISOString(); // ISO-8601 format
             }
 
+            // Ako nije ni string ni broj, vrati null
             return null;
         }
+        // FIX ZA DATUME //
 
-        // Konvertovanje vrednosti u string
+        // Za Stingovanje numbera
+
         function safeToString(value: any): string {
-            return value === undefined || value === null
-                ? "Not Defined"
-                : value.toString();
-        }
+            if (value === undefined || value === null) {
+                return "Not Defined"; // Ako je vrednost undefined ili null, vrati "-"
+            }
 
-        // Preuzimanje podataka iz sheet-a i normalizacija
-        const rawData = XLSX.utils.sheet_to_json(worksheet);
-        const normalizedData = normalizeKeys(rawData);
-        const mapping = carrierMappings[carrierType];
+            if (typeof value === "object" && value.toString) {
+                return value.toString(); // Ako je objekat sa toString metodom
+            }
+
+            return JSON.stringify(value); // Sigurno konvertovanje bilo koje vrednosti u string
+        }
 
         // Formatiranje podataka prema Prisma modelu
         const formattedData = normalizedData.map((row) => ({
-            carrier_type: carrierType,
+            carrier_type: mapping.typesofcarriers,
             status: safeToString(row[mapping.status]),
-            po_number: safeToString(row[mapping.po_number]),
+            po_number: safeToString(mapping.po_number),
             eta: parseDateString(row[mapping.eta]),
             ata: parseDateString(row[mapping.ata]),
             etd: parseDateString(row[mapping.etd]),
             atd: parseDateString(row[mapping.atd]),
-            packages: Number(row[mapping.packages]) || null,
+            packages: row[mapping.packages],
             weight: safeToString(row[mapping.weight]),
             volume: safeToString(row[mapping.volume]),
             shipper: safeToString(row[mapping.shipper]),
@@ -99,7 +140,7 @@ export async function POST(request: Request) {
             vessel_flight: safeToString(row[mapping.vessel_flight]),
             pickup_date: parseDateString(row[mapping.pickup_date]),
             latest_cp: safeToString(row[mapping.latest_cp]),
-        }));
+        }))
 
         // Ubacivanje podataka u bazu
         const result = await prisma.shipments.createMany({
