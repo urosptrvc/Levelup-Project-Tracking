@@ -15,7 +15,7 @@ generator client {
 
 model shipments {
   id               Int       @id @default(autoincrement()) // Automatski inkrement
-  Carrier          String
+  carrier_type     String?
   status           String?
   house_awb        String?
   shipper          String?

@@ -10,12 +10,12 @@ import {
 import Link from "next/link";
 
 interface ShipmentPageProps {
-    params: { id: string }
+    params: { id: number }
 }
 
 export default async function ShipmentDetailPage({ params }: ShipmentPageProps) {
     const shipment = await prisma.shipments.findUnique({
-        where: { id: Number(params.id) }, // Konvertujemo id u broj
+        where: { id: Number(params.id) },
     })
 
     if (!shipment) {
@@ -41,8 +41,8 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                 </TableHeader>
                 <TableBody>
                     <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>{shipment.id}</TableCell>
+                        <TableCell>Carrier</TableCell>
+                        <TableCell>{shipment.carrier_type}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Status</TableCell>
@@ -83,10 +83,6 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                     <TableRow>
                         <TableCell>ETD</TableCell>
                         <TableCell>{shipment.etd?.toISOString() || "-"}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Created At</TableCell>
-                        <TableCell>{shipment.created_at?.toISOString() || "-"}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
