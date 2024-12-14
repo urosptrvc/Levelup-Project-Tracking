@@ -65,112 +65,119 @@ export default function ShipmentsPage() {
         currentPage * rowsPerPage
     );
 
-    return (
-        <div className="container mx-auto py-10">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Shipments</h1>
-                <Link
-                    href="/shipments/upload"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                    Upload XLSX
-                </Link>
-            </div>
+    function removeQuotes(value: any): string {
+        if (typeof value === "string") {
+            return value.replace(/"/g, ""); // Uklanja sve znakove `"`
+        }
+        return value; // Ako nije string, vrati vrednost kako jeste
+    }
 
-            <div className="flex justify-between items-center mb-4 gap-4">
-                <Input
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-            </div>
+return (
+    <div className="container mx-auto py-10">
+        <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Shipments</h1>
+            <Link
+                href="/shipments/upload"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            >
+                Upload XLSX
+            </Link>
+        </div>
 
-            {isLoading ? (
-                <p>Loading...</p>
-            ) : (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
+        <div className="flex justify-between items-center mb-4 gap-4">
+            <Input
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+            />
+        </div>
+
+        {isLoading ? (
+            <p>Loading...</p>
+        ) : (
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        {columns.map((col) => (
+                            <TableHead key={col.key}>{col.label}</TableHead>
+                        ))}
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {paginatedShipments.map((shipment, index) => (
+                        <TableRow key={shipment.id || index}>
                             {columns.map((col) => (
-                                <TableHead key={col.key}>{col.label}</TableHead>
+                                <TableCell key={col.key}>
+                                    <Link href={`/shipments/${shipment.id}`}>
+                                        {removeQuotes(shipment[col.key])}
+                                    </Link>
+                                </TableCell>
                             ))}
                         </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {paginatedShipments.map((shipment, index) => (
-                            <TableRow key={shipment.id || index}>
-                                {columns.map((col) => (
-                                    <TableCell key={col.key}>
-                                        <Link href={`/shipments/${shipment.id}`}>
-                                        {shipment[col.key] || "-"}
-                                        </Link>
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            )}
+                    ))}
+                </TableBody>
+            </Table>
+        )}
 
-            {/* Pagination */}
-            <Pagination className="mt-4 mr-3 cursor-pointer">
-                <PaginationContent>
-                    <PaginationItem>
-                        <PaginationPrevious
-                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        />
-                    </PaginationItem>
+        {/* Pagination */}
+        <Pagination className="mt-4 mr-3 cursor-pointer">
+            <PaginationContent>
+                <PaginationItem>
+                    <PaginationPrevious
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    />
+                </PaginationItem>
 
-                    {/* Prva stranica */}
-                    {currentPage > 2 && (
-                        <>
-                            <PaginationItem>
-                                <PaginationLink onClick={() => setCurrentPage(1)} isActive={1 === currentPage}>
-                                    1
-                                </PaginationLink>
-                            </PaginationItem>
-                            {currentPage > 3 && <PaginationEllipsis />}
-                        </>
-                    )}
+                {/* Prva stranica */}
+                {currentPage > 2 && (
+                    <>
+                        <PaginationItem>
+                            <PaginationLink onClick={() => setCurrentPage(1)} isActive={1 === currentPage}>
+                                1
+                            </PaginationLink>
+                        </PaginationItem>
+                        {currentPage > 3 && <PaginationEllipsis />}
+                    </>
+                )}
 
-                    {/* Trenutna stranica i susedne */}
-                    {Array.from({ length: 3 }, (_, i) => currentPage - 1 + i)
-                        .filter((page) => page > 0 && page <= totalPages)
-                        .map((page) => (
-                            <PaginationItem key={page}>
-                                <PaginationLink
-                                    onClick={() => setCurrentPage(page)}
-                                    isActive={currentPage === page}
-                                >
-                                    {page}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ))}
+                {/* Trenutna stranica i susedne */}
+                {Array.from({ length: 3 }, (_, i) => currentPage - 1 + i)
+                    .filter((page) => page > 0 && page <= totalPages)
+                    .map((page) => (
+                        <PaginationItem key={page}>
+                            <PaginationLink
+                                onClick={() => setCurrentPage(page)}
+                                isActive={currentPage === page}
+                            >
+                                {page}
+                            </PaginationLink>
+                        </PaginationItem>
+                    ))}
 
-                    {/* Poslednja stranica */}
-                    {currentPage < totalPages - 1 && (
-                        <>
-                            {currentPage < totalPages - 2 && <PaginationEllipsis />}
-                            <PaginationItem>
-                                <PaginationLink
-                                    onClick={() => setCurrentPage(totalPages)}
-                                    isActive={currentPage === totalPages}
-                                >
-                                    {totalPages}
-                                </PaginationLink>
-                            </PaginationItem>
-                        </>
-                    )}
+                {/* Poslednja stranica */}
+                {currentPage < totalPages - 1 && (
+                    <>
+                        {currentPage < totalPages - 2 && <PaginationEllipsis />}
+                        <PaginationItem>
+                            <PaginationLink
+                                onClick={() => setCurrentPage(totalPages)}
+                                isActive={currentPage === totalPages}
+                            >
+                                {totalPages}
+                            </PaginationLink>
+                        </PaginationItem>
+                    </>
+                )}
 
-                    <PaginationItem>
-                        <PaginationNext
-                            onClick={() =>
-                                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                            }
-                        />
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
-        </div>
-    );
+                <PaginationItem>
+                    <PaginationNext
+                        onClick={() =>
+                            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                        }
+                    />
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    </div>
+);
 }

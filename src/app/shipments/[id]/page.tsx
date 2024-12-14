@@ -26,7 +26,7 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
         )
     }
     function formatDate(date: Date | null): string {
-        if (!date) return "-"; // Ako datum ne postoji, vrati "-"
+        if (!date) return "Not Defined"; // Ako datum ne postoji, vrati "-"
 
         // Provera za "Self-Delivery" - fiksni datum iz 1900
         if (date.getFullYear() === 1900 && date.getMonth() === 0 && date.getDate() === 1) {
@@ -48,6 +48,13 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
         return `${day}.${month}.${year} ${hours}:${minutes}`;
     }
 
+    function removeQuotes(value: any): string {
+        if (typeof value === "string") {
+            return value.replace(/"/g, ""); // Uklanja sve znakove `"`
+        }
+        return value; // Ako nije string, vrati vrednost kako jeste
+    }
+
 
     return (
         <div className="container mx-auto py-10">
@@ -65,39 +72,39 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                 <TableBody>
                     <TableRow>
                         <TableCell>Carrier</TableCell>
-                        <TableCell>{shipment.carrier_type || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.carrier_type)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Status</TableCell>
-                        <TableCell>{shipment.status || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.status)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Shipper</TableCell>
-                        <TableCell>{shipment.shipper || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.shipper)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Shipper Country</TableCell>
-                        <TableCell>{shipment.shipper_country || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.shipper_country)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Receiver</TableCell>
-                        <TableCell>{shipment.receiver || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.receiver)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Receiver Country</TableCell>
-                        <TableCell>{shipment.receiver_country || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.receiver_country)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Packages</TableCell>
-                        <TableCell>{shipment.packages ?? 0}</TableCell>
+                        <TableCell>{removeQuotes(shipment.packages)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Weight</TableCell>
-                        <TableCell>{shipment.weight || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.weight)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Volume</TableCell>
-                        <TableCell>{shipment.volume || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.volume)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>ETA (Estimated Time of Arrival)</TableCell>
@@ -117,7 +124,7 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                     </TableRow>
                     <TableRow>
                         <TableCell>Vessel/Flight</TableCell>
-                        <TableCell>{shipment.vessel_flight || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.vessel_flight)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Pickup Date</TableCell>
@@ -125,15 +132,15 @@ export default async function ShipmentDetailPage({ params }: ShipmentPageProps) 
                     </TableRow>
                     <TableRow>
                         <TableCell>Latest CP</TableCell>
-                        <TableCell>{shipment.latest_cp || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.latest_cp)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Shipper Ref No</TableCell>
-                        <TableCell>{shipment.shipper_ref_no || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.shipper_ref_no)}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Inco Term</TableCell>
-                        <TableCell>{shipment.inco_term || "-"}</TableCell>
+                        <TableCell>{removeQuotes(shipment.inco_term)}</TableCell>
                     </TableRow>
                 </TableBody>
 
