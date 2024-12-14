@@ -1,0 +1,60 @@
+Project structure for directory: C:\Users\K\Desktop\New folder
+
+├── 📂 prisma
+│   ├── 📂 migrations
+│   │   ├── 📂 20241213224749_change_id_to_string
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241213225731_carrier_type
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241213233316_carrier_underscore_type
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241214033557_weightandvolume_stringify
+│   │   │   └── 📄 migration.sql
+│   │   └── 📄 migration_lock.toml
+│   └── 📄 schema.prisma
+└── 📂 src
+    ├── 📂 app
+    │   ├── 📂 api
+    │   │   └── 📂 shipments
+    │   │       ├── 📄 route.ts
+    │   │       └── 📂 upload
+    │   │           └── 📄 route.ts
+    │   ├── 📄 favicon.ico
+    │   ├── 📄 globals.css
+    │   ├── 📄 layout.tsx
+    │   ├── 📂 lib
+    │   │   └── 📄 carrierMappings.ts
+    │   ├── 📄 page.tsx
+    │   └── 📂 shipments
+    │       ├── 📄 page.tsx
+    │       ├── 📂 upload
+    │       │   └── 📄 page.tsx
+    │       └── 📂 [id]
+    │           └── 📄 page.tsx
+    ├── 📂 components
+    │   └── 📂 ui
+    │       ├── 📄 button.tsx
+    │       ├── 📄 card.tsx
+    │       ├── 📄 dropdown-menu.tsx
+    │       ├── 📄 input.tsx
+    │       ├── 📄 pagination.tsx
+    │       ├── 📄 table.tsx
+    │       ├── 📄 toast.tsx
+    │       ├── 📄 toaster.tsx
+    │       ├── 📄 use-notifications.ts
+    │       └── 📄 use-toast.ts
+    └── 📂 lib
+        ├── 📄 prisma.ts
+        └── 📄 utils.ts
+
+
+Total directories 📂: 18
+Total files 📄: 28
+File extensions count:
+.sql : 4
+.toml : 1
+.prisma : 1
+.ts : 7
+.ico : 1
+.css : 1
+.tsx : 13
