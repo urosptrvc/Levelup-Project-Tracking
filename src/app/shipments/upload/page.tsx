@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CloudUpload, Loader2, FileText, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useNotifier } from "@/components/ui/use-notifications"
+import Link from "next/link";
 
 export default function UploadShipmentsPage() {
     const [file, setFile] = useState<File | null>(null)
@@ -55,64 +56,69 @@ export default function UploadShipmentsPage() {
     }
 
     return (
-        <Card className="w-full max-w-md mx-auto mt-10 shadow-lg">
-            <CardHeader>
-                <CardTitle className="text-center">Upload XLSX Shipments</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="flex flex-col items-center space-y-4">
-                    {/* Drag & drop funkcionalnosti */}
-                    <label
-                        htmlFor="file"
-                        className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition"
-                    >
-                        <CloudUpload className="w-8 h-8 text-gray-500 mb-2" />
-                        <span className="text-sm text-gray-600">
-                            {file ? file.name : "Click to select or drag a file here"}
-                        </span>
-                        {/* Skriveni input za file upload */}
-                        <Input
-                            id="file"
-                            type="file"
-                            accept=".xlsx"
-                            onChange={handleFileChange}
-                            className="hidden"
-                        />
-                    </label>
-
-                    {/* Prikaz selektovanog fajla*/}
-                    {file && (
-                        <div className="flex items-center justify-between w-full px-2 py-1 bg-gray-100 rounded-md">
-                            <div className="flex items-center space-x-2">
-                                <FileText className="text-gray-500" />
-                                <span className="text-sm text-gray-700">{file.name}</span>
-                            </div>
-                            <button
-                                onClick={() => setFile(null)}
-                                className="text-red-600 hover:text-red-800"
+            <div className="container mx-auto py-10">
+                <Link href="/shipments" className="text-blue-600 underline">
+                    ← Back to Shipments List
+                </Link>
+                <Card className="w-full max-w-md mx-auto mt-10 shadow-lg">
+                    <CardHeader>
+                        <CardTitle className="text-center">Upload XLSX Shipments</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-col items-center space-y-4">
+                            {/* Drag & drop funkcionalnosti */}
+                            <label
+                                htmlFor="file"
+                                className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition"
                             >
-                                <XCircle size={18} />
-                            </button>
-                        </div>
-                    )}
-
-                    {/* Dugme za dinamicki upload*/}
-                    <Button
-                        onClick={uploadFile}
-                        disabled={!file || isLoading}
-                        className="w-full"
-                    >
-                        {isLoading ? (
-                            <span className="flex items-center">
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                Uploading...
+                                <CloudUpload className="w-8 h-8 text-gray-500 mb-2"/>
+                                <span className="text-sm text-gray-600">
+                                {file ? file.name : "Click to select or drag a file here"}
                             </span>
-                        ) : (
-                            "Upload & Process"
-                        )}
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
+                                {/* Skriveni input za file upload */}
+                                <Input
+                                    id="file"
+                                    type="file"
+                                    accept=".xlsx"
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                />
+                            </label>
+
+                            {/* Prikaz selektovanog fajla*/}
+                            {file && (
+                                <div className="flex items-center justify-between w-full px-2 py-1 bg-gray-100 rounded-md">
+                                    <div className="flex items-center space-x-2">
+                                        <FileText className="text-gray-500"/>
+                                        <span className="text-sm text-gray-700">{file.name}</span>
+                                    </div>
+                                    <button
+                                        onClick={() => setFile(null)}
+                                        className="text-red-600 hover:text-red-800"
+                                    >
+                                        <XCircle size={18}/>
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Dugme za dinamicki upload*/}
+                            <Button
+                                onClick={uploadFile}
+                                disabled={!file || isLoading}
+                                className="w-full"
+                            >
+                                {isLoading ? (
+                                    <span className="flex items-center">
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin"/>
+                                    Uploading...
+                                </span>
+                                ) : (
+                                    "Upload & Process"
+                                )}
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
     )
 }

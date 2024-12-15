@@ -14,30 +14,32 @@ generator client {
 }
 
 model shipments {
-  id               Int       @id @default(autoincrement()) // Automatski inkrement
-  carrier_type     String?
-  status           String?
-  house_awb        String?
-  shipper          String?
-  shipper_country  String?
-  receiver         String?
-  receiver_country String?
-  po_number        String?
-  carrier          String?
-  packages         Int?
-  weight           String?
-  volume           String?
-  etd              DateTime?
-  eta              DateTime?
-  atd              DateTime?
-  ata              DateTime?
-  vessel_flight    String?
-  created_at       DateTime? @default(now())
-  updated_at       DateTime? @updatedAt
-  pickup_date      DateTime?
-  latest_cp        String?
-  shipper_ref_no   String?
-  inco_term        String?
+  id               Int     @id @default(autoincrement())
+  carrier_type     String? @db.Text
+  status           String? @db.Text
+  house_awb        String? @db.Text
+  shipper          String? @db.Text
+  shipper_country  String? @db.Text
+  receiver         String? @db.Text
+  receiver_country String? @db.Text
+  po_number        String? @db.Text
+  carrier          String? @db.Text
+  weight           String? @db.Text
+  volume           String? @db.Text
+  vessel_flight    String? @db.Text
+  latest_cp        String? @db.Text
+  shipper_ref_no   String? @db.Text
+  inco_term        String? @db.Text
+  filename         String? @db.Text
 
-  @@map("shipments") // Mapa prema tabeli shipments
+  packages    Int?
+  etd         DateTime?
+  eta         DateTime?
+  atd         DateTime?
+  ata         DateTime?
+  created_at  DateTime? @default(now())
+  updated_at  DateTime? @updatedAt
+  pickup_date DateTime?
+
+  @@map("shipments")
 }

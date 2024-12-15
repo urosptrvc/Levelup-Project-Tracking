@@ -1,0 +1,17 @@
+-- AlterTable
+ALTER TABLE `shipments` MODIFY `status` TEXT NULL,
+    MODIFY `house_awb` TEXT NULL,
+    MODIFY `shipper` TEXT NULL,
+    MODIFY `shipper_country` TEXT NULL,
+    MODIFY `receiver` TEXT NULL,
+    MODIFY `receiver_country` TEXT NULL,
+    MODIFY `po_number` TEXT NULL,
+    MODIFY `carrier` TEXT NULL,
+    MODIFY `weight` TEXT NULL,
+    MODIFY `volume` TEXT NULL,
+    MODIFY `vessel_flight` TEXT NULL,
+    MODIFY `latest_cp` TEXT NULL,
+    MODIFY `shipper_ref_no` TEXT NULL,
+    MODIFY `inco_term` TEXT NULL,
+    MODIFY `carrier_type` TEXT NULL,
+    MODIFY `filename` TEXT NULL;

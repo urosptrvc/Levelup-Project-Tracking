@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { prisma } from "@/lib/prisma";
-import { carrierMappings } from "@/app/lib/carrierMappings";
+import { carrierMappings } from "@/app/types/carrierMappings";
 
 
 //UPLOAD PAGE ROUTING
@@ -114,32 +114,41 @@ export async function POST(request: Request) {
 
             return JSON.stringify(value); // Sigurno konvertovanje bilo koje vrednosti u string
         };
-
+        console.log("Data"+ JSON.stringify(normalizedData));
         // Formatiranje podataka prema Prisma modelu
-        const formattedData = normalizedData.map((row) => ({
-            carrier_type: mapping.typesofcarriers,
-            status: safeToString(row[mapping.status]),
-            po_number: safeToString(mapping.po_number),
-            eta: parseDateString(row[mapping.eta]),
-            ata: parseDateString(row[mapping.ata]),
-            etd: parseDateString(row[mapping.etd]),
-            atd: parseDateString(row[mapping.atd]),
-            packages: row[mapping.packages],
-            weight: safeToString(row[mapping.weight]),
-            volume: safeToString(row[mapping.volume]),
-            shipper: safeToString(row[mapping.shipper]),
-            shipper_country: safeToString(row[mapping.shipper_country]),
-            receiver: safeToString(row[mapping.receiver]),
-            receiver_country: safeToString(row[mapping.receiver_country]),
-            house_awb: safeToString(row[mapping.houseawb]),
-            shipper_ref_no: safeToString(row[mapping.shipper_ref_no]),
-            carrier: safeToString(row[mapping.carrier]),
-            inco_term: safeToString(row[mapping.inco_term]),
-            vessel_flight: safeToString(row[mapping.vessel_flight]),
-            pickup_date: parseDateString(row[mapping.pickup_date]),
-            latest_cp: safeToString(row[mapping.latest_cp]),
-        }))
+        const formattedData = normalizedData.map((row) => {
+            // Određivanje vrednosti za carrier
+            const carrierValue = carrierType === "logwin"
+                ? safeToString(row[mapping.carrier])
+                : safeToString(mapping.carrier);
 
+            return {
+                filename: file.name,
+                carrier_type: mapping.typesofcarriers,
+                status: safeToString(row[mapping.status]),
+                po_number: row[mapping.po_number],
+                eta: parseDateString(row[mapping.eta]),
+                ata: parseDateString(row[mapping.ata]),
+                etd: parseDateString(row[mapping.etd]),
+                atd: parseDateString(row[mapping.atd]),
+                packages: row[mapping.packages],
+                weight: safeToString(row[mapping.weight]),
+                volume: safeToString(row[mapping.volume]),
+                shipper: safeToString(row[mapping.shipper]),
+                shipper_country: safeToString(row[mapping.shipper_country]),
+                receiver: safeToString(row[mapping.receiver]),
+                receiver_country: safeToString(row[mapping.receiver_country]),
+                house_awb: safeToString(row[mapping.houseawb]),
+                shipper_ref_no: safeToString(row[mapping.shipper_ref_no]),
+                carrier: carrierValue, // Postavljena vrednost uslovno
+                inco_term: safeToString(row[mapping.inco_term]),
+                vessel_flight: safeToString(row[mapping.vessel_flight]),
+                pickup_date: parseDateString(row[mapping.pickup_date]),
+                latest_cp: safeToString(row[mapping.latest_cp]),
+            };
+        });
+
+        console.log("Formatted Data:", JSON.stringify(formattedData, null, 2));
         // Ubacivanje podataka u bazu
         const result = await prisma.shipments.createMany({
             data: formattedData,

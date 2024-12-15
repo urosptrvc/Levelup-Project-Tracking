@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma"
+import { prisma } from "@/lib/prisma";
 import {
     Table,
     TableHeader,
@@ -6,28 +6,24 @@ import {
     TableRow,
     TableHead,
     TableCell,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import Link from "next/link";
-
 
 export default async function ShipmentDetailPage({ params }: { params: { id: number } }) {
     const shipment = await prisma.shipments.findUnique({
         where: { id: Number(params.id) },
-    })
-    //Provera da li je pronadjen shipment po ID koji je prosledjen.
+    });
+
     if (!shipment) {
         return (
             <div className="container mx-auto py-10">
                 <h1 className="text-2xl font-bold text-red-600">Shipment Not Found</h1>
             </div>
-        )
+        );
     }
 
-    // Funkcija za formatiranje datuma iz MySQL ISO-8601 u citljiv i razuman format
     function formatDate(date: Date | null): string {
-        if (!date) return "Not Defined"; // Ako datum ne postoji, vrati "-"
-
-        // Provera za "Self-Delivery" - fiksni datum iz 1900
+        if (!date) return "Not Defined";
         if (date.getFullYear() === 1900 && date.getMonth() === 0 && date.getDate() === 1) {
             return "Self-Delivery";
         }
@@ -36,12 +32,10 @@ export default async function ShipmentDetailPage({ params }: { params: { id: num
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const year = date.getFullYear();
 
-        // Provera ako su sati, minuti i sekunde nula
         if (date.getHours() === 0 && date.getMinutes() === 0 && date.getSeconds() === 0) {
-            return `${day}.${month}.${year}`; // Prikazuje samo datum
+            return `${day}.${month}.${year}`;
         }
 
-        // U suprotnom, prikazuje datum i vreme
         const hours = String(date.getHours()).padStart(2, "0");
         const minutes = String(date.getMinutes()).padStart(2, "0");
         return `${day}.${month}.${year} ${hours}:${minutes}`;
@@ -49,16 +43,45 @@ export default async function ShipmentDetailPage({ params }: { params: { id: num
 
     function removeQuotes(value: any): string {
         if (typeof value === "string") {
-            return value.replace(/"/g, ""); // Uklanja sve znakove `"`, ovo nam treba jer smo mapirali sve kao stringove
+            return value.replace(/"/g, ""); // Capture the result and return it
+        } else if (value === null) {
+            return "Not Defined";
+        } else {
+            return value.toString(); // Convert non-null, non-string types to string
         }
-        return value; // Ako nije string, vraca vrednost kako jeste
     }
 
+
+    // Podaci za tabelu spakovani u const
+    const shipmentDetails = [
+        { field: "Filename", value: shipment.filename },
+        { field: "Carrier Type", value: removeQuotes(shipment.carrier_type) },
+        { field: "Carrier", value: removeQuotes(shipment.carrier) },
+        { field: "Status", value: removeQuotes(shipment.status) },
+        { field: "House AWB", value: removeQuotes(shipment.house_awb) },
+        { field: "Shipper", value: removeQuotes(shipment.shipper) },
+        { field: "Shipper Country", value: removeQuotes(shipment.shipper_country) },
+        { field: "Receiver", value: removeQuotes(shipment.receiver) },
+        { field: "Receiver Country", value: removeQuotes(shipment.receiver_country) },
+        { field: "PO number", value: removeQuotes(shipment.po_number) },
+        { field: "Packages", value: removeQuotes(shipment.packages) },
+        { field: "Weight", value: removeQuotes(shipment.weight) },
+        { field: "Volume", value: removeQuotes(shipment.volume) },
+        { field: "ETA (Estimated Time of Arrival)", value: formatDate(shipment.eta) },
+        { field: "ETD (Estimated Time of Departure)", value: formatDate(shipment.etd) },
+        { field: "ATD (Actual Time of Departure)", value: formatDate(shipment.atd) },
+        { field: "ATA (Actual Time of Arrival)", value: formatDate(shipment.ata) },
+        { field: "Vessel/Flight", value: removeQuotes(shipment.vessel_flight) },
+        { field: "Pickup Date", value: formatDate(shipment.pickup_date) },
+        { field: "Latest Checkpoint", value: removeQuotes(shipment.latest_cp) },
+        { field: "Shipper Ref No", value: removeQuotes(shipment.shipper_ref_no) },
+        { field: "Inco Term", value: removeQuotes(shipment.inco_term) },
+    ];
 
     return (
         <div className="container mx-auto py-10">
             <Link href="/shipments" className="text-blue-600 underline">
-                ← Back to Shipments List
+                ← Back to Shipments Overview
             </Link>
             <h1 className="text-2xl font-bold mb-6">Shipment Details</h1>
             <Table>
@@ -69,81 +92,14 @@ export default async function ShipmentDetailPage({ params }: { params: { id: num
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell>Carrier</TableCell>
-                        <TableCell>{removeQuotes(shipment.carrier_type)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Status</TableCell>
-                        <TableCell>{removeQuotes(shipment.status)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Shipper</TableCell>
-                        <TableCell>{removeQuotes(shipment.shipper)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Shipper Country</TableCell>
-                        <TableCell>{removeQuotes(shipment.shipper_country)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Receiver</TableCell>
-                        <TableCell>{removeQuotes(shipment.receiver)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Receiver Country</TableCell>
-                        <TableCell>{removeQuotes(shipment.receiver_country)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Packages</TableCell>
-                        <TableCell>{removeQuotes(shipment.packages)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Weight</TableCell>
-                        <TableCell>{removeQuotes(shipment.weight)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Volume</TableCell>
-                        <TableCell>{removeQuotes(shipment.volume)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>ETA (Estimated Time of Arrival)</TableCell>
-                        <TableCell>{formatDate(shipment.eta)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>ETD (Estimated Time of Departure)</TableCell>
-                        <TableCell>{formatDate(shipment.etd)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>ATD (Actual Time of Departure)</TableCell>
-                        <TableCell>{formatDate(shipment.atd)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>ATA (Actual Time of Arrival)</TableCell>
-                        <TableCell>{formatDate(shipment.ata)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Vessel/Flight</TableCell>
-                        <TableCell>{removeQuotes(shipment.vessel_flight)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Pickup Date</TableCell>
-                        <TableCell>{formatDate(shipment.pickup_date)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Latest CP</TableCell>
-                        <TableCell>{removeQuotes(shipment.latest_cp)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Shipper Ref No</TableCell>
-                        <TableCell>{removeQuotes(shipment.shipper_ref_no)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Inco Term</TableCell>
-                        <TableCell>{removeQuotes(shipment.inco_term)}</TableCell>
-                    </TableRow>
+                    {shipmentDetails.map((detail, index) => (
+                        <TableRow key={index}>
+                            <TableCell>{detail.field}</TableCell>
+                            <TableCell>{detail.value}</TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
-
             </Table>
         </div>
-    )
+    );
 }
