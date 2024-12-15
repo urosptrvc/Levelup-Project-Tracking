@@ -26,8 +26,8 @@ Ova aplikacija omogućava korisnicima da učitavaju XLSX fajlove koji sadrže po
 Kloniranje repozitorijuma:
 
 ```bash
-  git clone <https://github.com/urosptrvc/Levelup-Project-Tracking>
-  cd <ime_foldera>
+  git clone https://github.com/urosptrvc/Levelup-Project-Tracking
+  cd Levelup-Project-Tracking
 ```
 
 Instalirajte dependencies:
