@@ -58,6 +58,7 @@ Pokrenite aplikaciju:
 U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiranje.
 ## Struktura projekta
 ```bash
+
 ├── 📂 prisma <------- ORM za handlovanje database i entiteta
 │   ├── 📂 migrations
 │   │   ├── 📂 20241213224749_change_id_to_string
@@ -67,30 +68,50 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
 │   │   ├── 📂 20241213233316_carrier_underscore_type
 │   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
 │   │   ├── 📂 20241214033557_weightandvolume_stringify
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241215172432_filename
+│   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
+│   │   ├── 📂 20241215181217_varchar
 │   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
 │   │   └── 📄 migration_lock.toml
 │   └── 📄 schema.prisma <------- Schema nase baze, ovde mozemo menjati samu bazu
-└── 📂 src 
+├── 📂 public
+│   ├── 📂 data <------- Data za testiranje
+│   │   ├── 📄 DHL.xlsx
+│   │   ├── 📄 DHL2.xlsx
+│   │   ├── 📄 hellmann.xlsx
+│   │   ├── 📄 hellmann2.xlsx
+│   │   └── 📄 logwin.xlsx
+│   ├── 📄 file.svg
+│   ├── 📄 globe.svg
+│   ├── 📄 next.svg
+│   ├── 📄 vercel.svg
+│   └── 📄 window.svg
+└── 📂 src
     ├── 📂 app <------- Root folder nase aplikacije
-    │   ├── 📂 api 
+    │   ├── 📂 api
     │   │   └── 📂 shipments
     │   │       ├── 📄 route.ts <------- Backend Server Side za stranicu shipments
     │   │       └── 📂 upload
     │   │           └── 📄 route.ts <------- Backend Server Side za stranicu upload
-    │   ├── 📄 favicon.ico <------- Ikonica nase aplikacije
-    │   ├── 📄 globals.css <------- Globalni css sa tailwindom
+    │   ├── 📄 favicon.ico
+    │   ├── 📄 globals.css
     │   ├── 📄 layout.tsx <------- Sloj koji obuhvata sve stranice nase aplikacije
-    │   ├── 📂 lib
-    │   │   └── 📄 carrierMappings.ts <------- Ovde vrsimo mapiranje u zavisnosti koji je carrier
     │   ├── 📄 page.tsx <------- Main page, preusmeren na /shipments
-    │   └── 📂 shipments
-    │       ├── 📄 page.tsx <------- Stranica shipments, pocetna
-    │       ├── 📂 upload
-    │       │   └── 📄 page.tsx <------- Stranica upload, gde vrsimo upload fajlova
-    │       └── 📂 [id]
-    │           └── 📄 page.tsx <------- Redirect stranica sa shipments page gde prikazujemo vise podataka
-    ├── 📂 components <------- Re-usable komponente, koriscen Shadcn/ui
-    │   └── 📂 ui
+    │   ├── 📂 shipments
+    │   │   ├── 📄 page.tsx <------- Stranica shipments, pocetna
+    │   │   ├── 📂 upload
+    │   │   │   └── 📄 page.tsx <------- Stranica upload, gde vrsimo upload 
+    │   │   └── 📂 [id]
+    │   │       └── 📄 page.tsx <------- Redirect stranica sa shipments
+    │   └── 📂 types
+    │       └── 📄 carrierMappings.ts <------- Mapiranje u zavisnosti koji je carrier
+    ├── 📂 components 
+    │   ├── 📄 Input.tsx <------- Komponenta za search
+    │   ├── 📄 PaginationComponent.tsx <------- Komponenta za Paginaciju
+    │   ├── 📄 TableHeaders.tsx <------- Komponenta za zaglavlje tabele
+    │   ├── 📄 TableRows.tsx <------- Komponenta za redove tabele
+    │   └── 📂 ui <------- Re-usable komponente, koriscen Shadcn/ui
     │       ├── 📄 button.tsx
     │       ├── 📄 card.tsx
     │       ├── 📄 input.tsx
@@ -100,19 +121,26 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │       ├── 📄 toaster.tsx
     │       ├── 📄 use-notifications.ts
     │       └── 📄 use-toast.ts
-    └── 📂 lib 
+    └── 📂 lib
         ├── 📄 prisma.ts <------- Prisma Client util
         └── 📄 utils.ts <------- XLSX utils
 
+Total directories 📂: 22
+Total files 📄: 43
 
-Total directories 📂: 18
-Total files 📄: 28
 File extensions count:
-.sql : 4
+.sql : 6
 .toml : 1
 .prisma : 1
+.xlsx : 5
+.svg : 5
 .ts : 7
 .ico : 1
 .css : 1
-.tsx : 13
+.tsx : 16
 ```
+
+## Dokumentacija i proces razmisljanja
+
+[Dokumentacija](https://linktodocumentation)
+

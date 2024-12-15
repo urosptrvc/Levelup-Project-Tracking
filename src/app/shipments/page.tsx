@@ -54,10 +54,11 @@ export default function ShipmentsPage() {
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
     );
-
+    //Funcija za pokazivanje itema bez ""
     const removeQuotes = (value: any): string =>
         typeof value === "string" ? value.replace(/"/g, "") : value;
 
+    //Funcija za regulisanje ispravnog displaya datuma
     const formatDate = (date: any): string => {
         if (!date) return "Not Defined";
         const parsedDate = new Date(date);
