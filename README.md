@@ -142,5 +142,5 @@ File extensions count:
 
 ## Dokumentacija i proces razmisljanja
 
-[Dokumentacija](https://linktodocumentation)
+[Dokumentacija](https://github.com/urosptrvc/Levelup-Project-Tracking/blob/master/Dokumentacija.pdf)
 
