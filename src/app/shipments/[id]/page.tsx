@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 
+
 export default async function ShipmentDetailPage({ params }: any) {
     const shipment = await prisma.shipments.findUnique({
         where: { id: Number(params.id) },
