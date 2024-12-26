@@ -1,5 +1,6 @@
 import {TableBody, TableCell, TableRow} from "@/components/ui/table";
 import Link from "next/link";
+import React from "react";
 
 type Column = {
     key: string;

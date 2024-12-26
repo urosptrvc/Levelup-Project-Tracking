@@ -5,11 +5,13 @@ import { signIn } from "next-auth/react";
 import { AuthCard } from "@/components/AuthCard";
 import { AuthForm } from "@/components/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
+import {useRouter} from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { notifyError, notifySuccess } = useNotifier();
+    const router = useRouter();
 
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
@@ -17,15 +19,14 @@ export default function LoginPage() {
         const result = await signIn("credentials", {
             email,
             password,
-            redirect: true,
-            callbackUrl: "/shipments",
+            redirect: false,
         });
 
         if (result?.error) {
             notifyError("Error", result.error);
-            return;
         } else {
             notifySuccess("Success", "Login successful");
+            router.push("/shipments");
         }
     };
 
@@ -49,7 +50,7 @@ export default function LoginPage() {
                         setValue: setPassword,
                     },
                 ]}
-                onSubmit={handleLogin}
+                onSubmitAction={handleLogin}
                 submitText="Login"
             />
         </AuthCard>

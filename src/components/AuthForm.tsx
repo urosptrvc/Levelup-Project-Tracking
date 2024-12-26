@@ -11,14 +11,14 @@ interface AuthFormProps {
         value: string;
         setValue: (value: string) => void;
     }[];
-    onSubmit: (e: FormEvent) => void;
+    onSubmitAction: (e: FormEvent) => void;
     submitText: string;
     extraFields?: ReactNode;
 }
 
-export function AuthForm({ fields, onSubmit, submitText, extraFields }: AuthFormProps) {
+export function AuthForm({ fields, onSubmitAction, submitText, extraFields }: AuthFormProps) {
     return (
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={onSubmitAction} className="space-y-4">
             {fields.map((field, index) => (
                 <Input
                     key={index}

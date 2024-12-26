@@ -1,4 +1,5 @@
 import {TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import React from "react";
 
 type Column = {
     key: string;

@@ -1,15 +1,17 @@
 "use client"
 
-import Link from "next/link";
-import Input from "@/components/Input";
-import {Table} from "@/components/ui/table";
-import {PaginationComponent} from "@/components/PaginationComponent";
-import {TableHeaders} from '@/components/TableHeaders';
-import {TableRows} from '@/components/TableRows';
-import {useEffect, useState} from "react";
-import {useNotifier} from "@/components/ui/use-notifications";
-import {Button} from "@/components/ui/button";
-import {signOut} from "next-auth/react";
+import Link from "next/link"
+import Input from "@/components/Input"
+import {Table} from "@/components/ui/table"
+import {PaginationComponent} from "@/components/PaginationComponent"
+import {TableHeaders} from '@/components/TableHeaders'
+import {TableRows} from '@/components/TableRows'
+import React, {useEffect, useState} from "react"
+import {useNotifier} from "@/components/ui/use-notifications"
+import {Button} from "@/components/ui/button"
+import {signOut} from "next-auth/react"
+import { Skeleton } from "@/components/ui/skeleton"
+
 
 const columns = [
     { key: "carrier_type", label: "Carrier Type" },
@@ -26,7 +28,7 @@ export default function ShipmentsPage() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const { notifyError } = useNotifier();
+    const { notifyError, notifySuccess} = useNotifier();
     const rowsPerPage = 15;
 
     useEffect(() => {
@@ -78,6 +80,8 @@ export default function ShipmentsPage() {
     const handleLogout = () => {
         signOut({
             callbackUrl: "/auth/login",
+        }).then(() => {
+            notifySuccess("Success","Logged out successfully!");
         });
     };
     return (
@@ -112,10 +116,17 @@ export default function ShipmentsPage() {
 
             {/* Tabela sa podacima */}
             {isLoading ? (
-                <p>Loading...</p>
+                <div className="space-y-4">
+                    <Skeleton className="h-8 w-full"/>
+                    <Skeleton className="h-8 w-full"/>
+                    <Skeleton className="h-8 w-full"/>
+                    <Skeleton className="h-8 w-full"/>
+                    <Skeleton className="h-8 w-full"/>
+                    <Skeleton className="h-8 w-full"/>
+                </div>
             ) : (
                 <Table>
-                    <TableHeaders columns={columns} />
+                    <TableHeaders columns={columns}/>
                     <TableRows
                         columns={columns}
                         shipments={paginatedShipments}

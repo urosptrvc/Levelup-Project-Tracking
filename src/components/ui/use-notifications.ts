@@ -6,7 +6,6 @@ import { useToast } from "./use-toast"
 export function useNotifier() {
     const { toast } = useToast()
 
-    // npr. destructive toast za greške
     function notifyError(title: string, description?: string) {
         toast({
             variant: "destructive",
@@ -15,7 +14,6 @@ export function useNotifier() {
         })
     }
 
-    // default toast za uspele radnje
     function notifySuccess(title: string, description?: string) {
         toast({
             variant: "default",

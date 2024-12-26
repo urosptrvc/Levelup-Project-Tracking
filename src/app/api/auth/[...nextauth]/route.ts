@@ -20,7 +20,9 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Email and password are required.")
                 }
                 const user = await prisma.user.findUnique({ where: { email } })
-                if (!user) throw new Error("User not found.")
+                if (!user) {
+                    throw new Error("User not found.");
+                }
                 const isValid = await compare(password, user.password)
                 if (!isValid) throw new Error("Invalid password.")
                 return { id: user.id, email: user.email, name: user.name, role: user.role }

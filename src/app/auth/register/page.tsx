@@ -69,7 +69,7 @@ export default function RegisterPage() {
                         <option value="admin">Administrator</option>
                     </select>
                 }
-                onSubmit={handleRegister}
+                onSubmitAction={handleRegister}
                 submitText="Register"
             />
         </AuthCard>

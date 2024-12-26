@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"
 import {
     Table,
     TableHeader,
@@ -6,9 +6,8 @@ import {
     TableRow,
     TableHead,
     TableCell,
-} from "@/components/ui/table";
-import Link from "next/link";
-
+} from "@/components/ui/table"
+import Link from "next/link"
 
 export default async function ShipmentDetailPage({ params }: any) {
     const shipment = await prisma.shipments.findUnique({

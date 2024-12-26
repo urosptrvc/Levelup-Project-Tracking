@@ -6,6 +6,7 @@ import {
     PaginationLink, PaginationNext,
     PaginationPrevious
 } from "./ui/pagination";
+import React from "react";
 
 interface PaginationComponentProps {
     currentPage: number;
