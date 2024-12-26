@@ -8,6 +8,8 @@ import {TableHeaders} from '@/components/TableHeaders';
 import {TableRows} from '@/components/TableRows';
 import {useEffect, useState} from "react";
 import {useNotifier} from "@/components/ui/use-notifications";
+import {Button} from "@/components/ui/button";
+import {signOut} from "next-auth/react";
 
 const columns = [
     { key: "carrier_type", label: "Carrier Type" },
@@ -73,17 +75,27 @@ export default function ShipmentsPage() {
 
     const formatValue = (value: any) => removeQuotes(formatDate(value));
 
+    const handleLogout = () => {
+        signOut({
+            callbackUrl: "/auth/login",
+        });
+    };
     return (
         <div className="container mx-auto py-10">
             {/* Header sekcija */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Shipments Overview</h1>
-                <Link
-                    href="/shipments/upload"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                    Upload XLSX
-                </Link>
+                <div className="flex items-center gap-2">
+                    <Link
+                        href="/shipments/upload"
+                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                        Upload XLSX
+                    </Link>
+                    <Button variant="secondary" onClick={handleLogout}>
+                        Logout
+                    </Button>
+                </div>
             </div>
 
             {/* Search input */}

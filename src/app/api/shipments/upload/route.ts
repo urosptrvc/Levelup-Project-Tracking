@@ -1,12 +1,23 @@
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
 import * as XLSX from "xlsx";
 import { prisma } from "@/lib/prisma";
-import { carrierMappings } from "@/app/types/carrierMappings";
-
+import { carrierMappings } from "@/app/data/carrierMappings";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 //UPLOAD PAGE ROUTING
 export async function POST(request: Request) {
     try {
+
+        const session = await getServerSession(authOptions);
+
+        if (!session || session.user.role !== "admin") {
+            return NextResponse.json(
+                { error: "Forbidden - Only admins can upload" },
+                { status: 403 }
+            );
+        }
+
         const formData = await request.formData();
         const file = formData.get("file") as File;
 
