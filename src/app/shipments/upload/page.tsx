@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CloudUpload, Loader2, FileText, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useNotifier } from "@/components/ui/use-notifications"
-import Link from "next/link";
 
 export default function UploadShipmentsPage() {
     const [file, setFile] = useState<File | null>(null)
@@ -57,9 +56,6 @@ export default function UploadShipmentsPage() {
 
     return (
             <div className="container mx-auto py-10">
-                <Link href="/shipments" className="text-blue-600 underline">
-                    ← Back to Shipments Overview
-                </Link>
                 <Card className="w-full max-w-md mx-auto mt-10 shadow-lg">
                     <CardHeader>
                         <CardTitle className="text-center">Upload XLSX Shipments</CardTitle>

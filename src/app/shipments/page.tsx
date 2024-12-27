@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import Input from "@/components/Input"
 import {Table} from "@/components/ui/table"
 import {PaginationComponent} from "@/components/PaginationComponent"
@@ -8,8 +7,6 @@ import {TableHeaders} from '@/components/TableHeaders'
 import {TableRows} from '@/components/TableRows'
 import React, {useEffect, useState} from "react"
 import {useNotifier} from "@/components/ui/use-notifications"
-import {Button} from "@/components/ui/button"
-import {signOut} from "next-auth/react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 
@@ -28,7 +25,7 @@ export default function ShipmentsPage() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const { notifyError, notifySuccess} = useNotifier();
+    const { notifyError} = useNotifier();
     const rowsPerPage = 15;
 
     useEffect(() => {
@@ -77,31 +74,8 @@ export default function ShipmentsPage() {
 
     const formatValue = (value: any) => removeQuotes(formatDate(value));
 
-    const handleLogout = () => {
-        signOut({
-            callbackUrl: "/auth/login",
-        }).then(() => {
-            notifySuccess("Success","Logged out successfully!");
-        });
-    };
     return (
         <div className="container mx-auto py-10">
-            {/* Header sekcija */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Shipments Overview</h1>
-                <div className="flex items-center gap-2">
-                    <Link
-                        href="/shipments/upload"
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                    >
-                        Upload XLSX
-                    </Link>
-                    <Button variant="secondary" onClick={handleLogout}>
-                        Logout
-                    </Button>
-                </div>
-            </div>
-
             {/* Search input */}
             <div className="flex justify-between items-center mb-4 gap-4">
                 <Input

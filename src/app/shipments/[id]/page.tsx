@@ -7,7 +7,6 @@ import {
     TableHead,
     TableCell,
 } from "@/components/ui/table"
-import Link from "next/link"
 
 export default async function ShipmentDetailPage({ params }: any) {
     const shipment = await prisma.shipments.findUnique({
@@ -80,9 +79,6 @@ export default async function ShipmentDetailPage({ params }: any) {
 
     return (
         <div className="container mx-auto py-10">
-            <Link href="/shipments" className="text-blue-600 underline">
-                ← Back to Shipments Overview
-            </Link>
             <h1 className="text-2xl font-bold mb-6">Shipment Details</h1>
             <Table>
                 <TableHeader>
