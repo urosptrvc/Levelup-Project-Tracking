@@ -13,6 +13,7 @@ Ova aplikacija omogućava korisnicima da učitavaju XLSX fajlove koji sadrže po
 ## Tehnologije korišćene
 
  - Next.js – Framework za izradu React aplikacija.
+ - NextAuth - U kombinaciji sa Prismom za auth usera.
  - TypeScript – Tipiziran JavaScript za sigurniji kod.
  - Tailwind CSS – Stilizovanje korisničkog interfejsa.
  - Shadcn/ui – Stilizovanje korisničkog interfejsa & reusable komponente.
@@ -26,8 +27,8 @@ Ova aplikacija omogućava korisnicima da učitavaju XLSX fajlove koji sadrže po
 Kloniranje repozitorijuma:
 
 ```bash
-  git clone https://github.com/urosptrvc/Levelup-Project-Tracking
-  cd Levelup-Project-Tracking
+  git clone <https://github.com/urosptrvc/Levelup-Project-Tracking>
+  cd <ime_foldera>
 ```
 
 Instalirajte dependencies:
@@ -42,6 +43,7 @@ Kreirajte .env fajl u root projekta
 
 ```bash
   DATABASE_URL="mysql://user:password@localhost:3306/levelup_db"
+  NEXTAUTH_SECRET="jaka_sifra"
 ```
 
 Napravite MySQL database koji ce se zvati levelup_db, zatim pokrenite prisma migraciju koja ce ubaciti entitet i  potrebne atrubute.
@@ -62,19 +64,25 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
 ├── 📂 prisma <------- ORM za handlovanje database i entiteta
 │   ├── 📂 migrations
 │   │   ├── 📂 20241213224749_change_id_to_string
-│   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
+│   │   │   └── 📄 migration.sql
 │   │   ├── 📂 20241213225731_carrier_type
-│   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
+│   │   │   └── 📄 migration.sql
 │   │   ├── 📂 20241213233316_carrier_underscore_type
-│   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
+│   │   │   └── 📄 migration.sql
 │   │   ├── 📂 20241214033557_weightandvolume_stringify
 │   │   │   └── 📄 migration.sql
 │   │   ├── 📂 20241215172432_filename
-│   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
+│   │   │   └── 📄 migration.sql
 │   │   ├── 📂 20241215181217_varchar
-│   │   │   └── 📄 migration.sql <------- Izvsene ispavke i promene za bazu
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241226163312_
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241227014838_typesupdates
+│   │   │   └── 📄 migration.sql
+│   │   ├── 📂 20241227015243_
+│   │   │   └── 📄 migration.sql <------- Izvsene ispravke nad bazom
 │   │   └── 📄 migration_lock.toml
-│   └── 📄 schema.prisma <------- Schema nase baze, ovde mozemo menjati samu bazu
+│   └── 📄 schema.prisma <------- Schema nase baze
 ├── 📂 public
 │   ├── 📂 data <------- Data za testiranje
 │   │   ├── 📄 DHL.xlsx
@@ -90,54 +98,75 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
 └── 📂 src
     ├── 📂 app <------- Root folder nase aplikacije
     │   ├── 📂 api
+    │   │   ├── 📂 auth
+    │   │   │   ├── 📂 register
+    │   │   │   │   └── 📄 route.ts <------- Backend Server Side za register
+    │   │   │   └── 📂 [...nextauth]
+    │   │   │       └── 📄 route.ts <------- NextAuth & Prisma login
     │   │   └── 📂 shipments
     │   │       ├── 📄 route.ts <------- Backend Server Side za stranicu shipments
     │   │       └── 📂 upload
     │   │           └── 📄 route.ts <------- Backend Server Side za stranicu upload
+    │   ├── 📂 auth
+    │   │   ├── 📂 login
+    │   │   │   └── 📄 page.tsx <------- Login stranica
+    │   │   └── 📂 register
+    │   │       └── 📄 page.tsx <------- Register stranica
+    │   ├── 📂 data
+    │   │   └── 📄 carrierMappings.ts <------- Mapiranje u zavisnosti koji je carrier
     │   ├── 📄 favicon.ico
     │   ├── 📄 globals.css
-    │   ├── 📄 layout.tsx <------- Sloj koji obuhvata sve stranice nase aplikacije
-    │   ├── 📄 page.tsx <------- Main page, preusmeren na /shipments
+    │   ├── 📄 layout.tsx
+    │   ├── 📄 page.tsx
+    │   ├── 📄 providers.tsx
     │   ├── 📂 shipments
     │   │   ├── 📄 page.tsx <------- Stranica shipments, pocetna
     │   │   ├── 📂 upload
     │   │   │   └── 📄 page.tsx <------- Stranica upload, gde vrsimo upload 
     │   │   └── 📂 [id]
+    │   │       ├── 📄 loading.tsx <------- Skeleton pri ucitavanju page.tsx
     │   │       └── 📄 page.tsx <------- Redirect stranica sa shipments
     │   └── 📂 types
-    │       └── 📄 carrierMappings.ts <------- Mapiranje u zavisnosti koji je carrier
-    ├── 📂 components 
-    │   ├── 📄 Input.tsx <------- Komponenta za search
-    │   ├── 📄 PaginationComponent.tsx <------- Komponenta za Paginaciju
+    │       └── 📄 next-auth.d.ts <------- Prosireni interfejsi za auth
+    ├── 📂 components
+    │   ├── 📄 AuthCard.tsx <------- Komponenta za card login/register
+    │   ├── 📄 AuthForm.tsx <------- Komponenta za polja login/register
+    │   ├── 📄 Navbar.tsx <------- Komponenta za navbar
+    │   ├── 📄 PaginationComponent.tsx <------- Komponenta za paginaciju
     │   ├── 📄 TableHeaders.tsx <------- Komponenta za zaglavlje tabele
     │   ├── 📄 TableRows.tsx <------- Komponenta za redove tabele
-    │   └── 📂 ui <------- Re-usable komponente, koriscen Shadcn/ui
-    │       ├── 📄 button.tsx
-    │       ├── 📄 card.tsx
-    │       ├── 📄 input.tsx
-    │       ├── 📄 pagination.tsx
-    │       ├── 📄 table.tsx
-    │       ├── 📄 toast.tsx
-    │       ├── 📄 toaster.tsx
-    │       ├── 📄 use-notifications.ts
-    │       └── 📄 use-toast.ts
-    └── 📂 lib
-        ├── 📄 prisma.ts <------- Prisma Client util
-        └── 📄 utils.ts <------- XLSX utils
+    │   ├── 📄 UploadLink.tsx <------- Komponenta za upload admin/user role
+    │   ├── 📂 ui <------- Shadcn/ui komponente
+    │   │   ├── 📄 button.tsx
+    │   │   ├── 📄 card.tsx
+    │   │   ├── 📄 dialog.tsx
+    │   │   ├── 📄 input.tsx
+    │   │   ├── 📄 pagination.tsx
+    │   │   ├── 📄 select.tsx
+    │   │   ├── 📄 skeleton.tsx
+    │   │   ├── 📄 table.tsx
+    │   │   ├── 📄 toast.tsx
+    │   │   ├── 📄 toaster.tsx
+    │   │   ├── 📄 use-notifications.ts
+    │   │   └── 📄 use-toast.ts
+    ├── 📂 lib
+    │   ├── 📄 prisma.ts <------- Prisma Client util
+    │   └── 📄 utils.ts <------- Shadcn util
+    └── 📄 middleware.ts <------- Blokator stranica bez auth-a
 
-Total directories 📂: 22
-Total files 📄: 43
+Total directories 📂: 32
+Total files 📄: 61
 
 File extensions count:
-.sql : 6
+.sql : 9
 .toml : 1
 .prisma : 1
 .xlsx : 5
 .svg : 5
-.ts : 7
+.ts : 11
+.tsx : 27
 .ico : 1
 .css : 1
-.tsx : 16
 ```
 
 ## Dokumentacija i proces razmisljanja
