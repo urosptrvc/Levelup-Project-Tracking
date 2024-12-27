@@ -58,6 +58,11 @@ Pokrenite aplikaciju:
   npm run dev
 ```
 U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiranje.
+
+## PDF Dokumentacija
+
+[GitDokumentacija](https://github.com/urosptrvc/Levelup-Project-Tracking/blob/master/Dokumentacija.pdf) ili [OnlineDokumentacija](https://smallpdf.com/file#s=be9064b8-f96a-4fa5-a257-4f163aebe2de)
+
 ## Struktura projekta
 ```bash
 
@@ -168,8 +173,4 @@ File extensions count:
 .ico : 1
 .css : 1
 ```
-
-## Dokumentacija i proces razmisljanja
-
-[Dokumentacija](https://github.com/urosptrvc/Levelup-Project-Tracking/blob/master/Dokumentacija.pdf)
 
