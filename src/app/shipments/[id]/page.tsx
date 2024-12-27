@@ -27,16 +27,16 @@ export default async function ShipmentDetailPage({ params }: any) {
             return "Self-Delivery";
         }
 
-        const day = String(date.getDate()).padStart(2, "0");
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = date.getFullYear();
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const year = date.getUTCFullYear();
 
-        if (date.getHours() === 0 && date.getMinutes() === 0 && date.getSeconds() === 0) {
+        if (date.getUTCHours() === 0 && date.getUTCMinutes() === 0 && date.getUTCSeconds() === 0) {
             return `${day}.${month}.${year}`;
         }
 
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const hours = String(date.getUTCHours()).padStart(2, "0");
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
         return `${day}.${month}.${year} ${hours}:${minutes}`;
     }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import Input from "@/components/Input"
+import { Input } from "@/components/ui/input"
 import {Table} from "@/components/ui/table"
 import {PaginationComponent} from "@/components/PaginationComponent"
 import {TableHeaders} from '@/components/TableHeaders'
@@ -41,13 +41,14 @@ export default function ShipmentsPage() {
                 setIsLoading(false);
             }
         };
-        fetchShipments();
+        fetchShipments().catch(err => console.error(err));
     }, []);
 
     const searchedShipments = shipments.filter((shipment) =>
-        Object.values(shipment).some((value) =>
-            value?.toString().toLowerCase().includes(search.toLowerCase())
-        )
+        columns.some((column) => {
+            const value = shipment[column.key];
+            return value?.toString().toLowerCase().includes(search.toLowerCase());
+        })
     );
 
     const totalPages = Math.ceil(searchedShipments.length / rowsPerPage);
@@ -64,20 +65,27 @@ export default function ShipmentsPage() {
         if (!date) return "Not Defined";
         const parsedDate = new Date(date);
         if (isNaN(parsedDate.getTime())) return date;
-        const day = String(parsedDate.getDate()).padStart(2, "0");
-        const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
-        const year = parsedDate.getFullYear();
-        const hours = String(parsedDate.getHours()).padStart(2, "0");
-        const minutes = String(parsedDate.getMinutes()).padStart(2, "0");
+
+        const day = String(parsedDate.getUTCDate()).padStart(2, "0");
+        const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
+        const year = parsedDate.getUTCFullYear();
+
+        if (parsedDate.getUTCHours() === 0 && parsedDate.getUTCMinutes() === 0 && parsedDate.getUTCSeconds() === 0) {
+            return `${day}.${month}.${year}`;
+        }
+
+        const hours = String(parsedDate.getUTCHours()).padStart(2, "0");
+        const minutes = String(parsedDate.getUTCMinutes()).padStart(2, "0");
         return `${day}.${month}.${year} ${hours}:${minutes}`;
     };
+
 
     const formatValue = (value: any) => removeQuotes(formatDate(value));
 
     return (
         <div className="container mx-auto py-10">
             {/* Search input */}
-            <div className="flex justify-between items-center mb-4 gap-4">
+            <div className="mb-4 gap-4 flex flex-wrap items-center">
                 <Input
                     placeholder="Search..."
                     value={search}
@@ -85,7 +93,11 @@ export default function ShipmentsPage() {
                         setSearch(e.target.value);
                         setCurrentPage(1);
                     }}
+                    className="w-1/3 md:w-1/2"
                 />
+                <p className="text-slate-400">
+                    For Date search must type in format YYYY-MM-DD
+                </p>
             </div>
 
             {/* Tabela sa podacima */}

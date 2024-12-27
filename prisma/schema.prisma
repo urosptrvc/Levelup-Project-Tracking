@@ -9,22 +9,22 @@ generator client {
 
 model shipments {
   id               Int       @id @default(autoincrement())
-  carrier_type     String?
-  status           String?
-  house_awb        String?
-  shipper          String?
-  shipper_country  String?
-  receiver         String?
-  receiver_country String?
-  po_number        String?
-  carrier          String?
-  weight           String?
-  volume           String?
-  vessel_flight    String?
-  latest_cp        String?
-  shipper_ref_no   String?
-  inco_term        String?
-  filename         String?
+  carrier_type     String?   @db.Text
+  status           String?   @db.Text
+  house_awb        String?   @db.Text
+  shipper          String?   @db.Text
+  shipper_country  String?   @db.Text
+  receiver         String?   @db.Text
+  receiver_country String?   @db.Text
+  po_number        String?   @db.Text
+  carrier          String?   @db.Text
+  weight           String?   @db.Text
+  volume           String?   @db.Text
+  vessel_flight    String?   @db.Text
+  latest_cp        String?   @db.Text
+  shipper_ref_no   String?   @db.Text
+  inco_term        String?   @db.Text
+  filename         String?   @db.Text
   packages         Int?
   etd              DateTime?
   eta              DateTime?
@@ -45,4 +45,6 @@ model User {
   role      String   @default("user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("users")
 }

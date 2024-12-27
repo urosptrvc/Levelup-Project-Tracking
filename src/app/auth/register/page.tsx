@@ -1,10 +1,11 @@
 "use client";
 
-import {FormEvent, useState} from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthCard } from "@/components/AuthCard";
 import { AuthForm } from "@/components/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -59,15 +60,15 @@ export default function RegisterPage() {
                     },
                 ]}
                 extraFields={
-                    <select
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        className="p-2 border rounded w-full"
-                    >
-                        <option value="">Select Role</option>
-                        <option value="user">User</option>
-                        <option value="admin">Administrator</option>
-                    </select>
+                    <Select onValueChange={setRole}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select Role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="user">User</SelectItem>
+                            <SelectItem value="admin">Administrator</SelectItem>
+                        </SelectContent>
+                    </Select>
                 }
                 onSubmitAction={handleRegister}
                 submitText="Register"

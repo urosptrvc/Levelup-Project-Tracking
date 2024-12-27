@@ -74,7 +74,6 @@ export async function POST(request: Request) {
             return normalizedRow;
         });
         const normalizedData = normalizeKeys(rawData);
-
         // Fix za sve datume //
 
         const parseDateString = (value: any): string | null => {
@@ -101,12 +100,27 @@ export async function POST(request: Request) {
 
             // Ako je vrednost broj (Excel datum format)
             if (typeof value === "number") {
-                const excelEpoch = new Date(1899, 11, 30).getTime(); // Excel epoha
-                const dateTimeInMs = excelEpoch + value * 24 * 60 * 60 * 1000;
-                const date = new Date(dateTimeInMs);
-                // Postavi vreme na 00:00:00 ako ne postoji
-                date.setUTCHours(0, 0, 0, 0);
-                return date.toISOString(); // ISO-8601 format je format koji MySQL zahteva za datume
+                // Definišite Excel epoch (30. decembar 1899.)
+                const excelEpoch = Date.UTC(1899, 11, 30); // Mjeseci su indeksirani od 0 (0=Januar, 11=Decembar)
+
+                // Razdvojite celobrojni deo (datum) i decimalni deo (vreme)
+                const integerPart = Math.floor(value);
+                const fractionalPart = value - integerPart;
+
+                // Konvertujte datum deo u milisekunde
+                const dateInMs = excelEpoch + integerPart * 24 * 60 * 60 * 1000;
+                const date = new Date(dateInMs);
+
+                if (fractionalPart === 0) {
+                    // Ako nema vremenskog dela, postavi vreme na 00:00:00
+                    date.setHours(0, 0, 0, 0);
+                } else {
+                    // Ako postoji vremenski deo, dodajte ga u milisekundama
+                    const timeInMs = fractionalPart * 24 * 60 * 60 * 1000;
+                    date.setTime(dateInMs + timeInMs);
+                }
+
+                return date.toISOString(); // Vraća datum i vreme u ISO-8601 formatu
             }
 
             return null;
@@ -126,7 +140,6 @@ export async function POST(request: Request) {
 
             return JSON.stringify(value); // Sigurno konvertovanje bilo koje vrednosti u string
         };
-        console.log("Data"+ JSON.stringify(normalizedData));
         // Formatiranje podataka prema Prisma modelu
         const formattedData = normalizedData.map((row) => {
             // Određivanje vrednosti za carrier
@@ -160,7 +173,7 @@ export async function POST(request: Request) {
             };
         });
 
-        console.log("Formatted Data:", JSON.stringify(formattedData, null, 2));
+        //console.error("Formatted Data:", JSON.stringify(formattedData, null, 2));
         // Ubacivanje podataka u bazu
         const result = await prisma.shipments.createMany({
             data: formattedData,
