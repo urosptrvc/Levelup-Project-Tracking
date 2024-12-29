@@ -1,18 +1,23 @@
-"use client"
+"use client";
 
-import { Input } from "@/components/ui/input"
-import {Table} from "@/components/ui/table"
-import {PaginationComponent} from "@/components/PaginationComponent"
-import {TableHeaders} from '@/components/TableHeaders'
-import {TableRows} from '@/components/TableRows'
-import React, {useEffect, useState} from "react"
-import {useNotifier} from "@/components/ui/use-notifications"
-import { Skeleton } from "@/components/ui/skeleton"
+import React, { useEffect, useState } from "react";
+import { Table } from "@/components/ui/table";
+import TableRows from "@/components/TableRows";
+import TableHeaders from "@/components/TableHeaders";
+import PaginationComponent from "@/components/PaginationComponent";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useNotifier } from "@/components/ui/use-notifications";
+import { shipments } from "@prisma/client";
 
+// Tip za kolone
+type Column = {
+    key: keyof shipments;
+    label: string;
+};
 
-const columns = [
+const columns: Column[] = [
     { key: "carrier_type", label: "Carrier Type" },
-    { key: "carrier", label: "Carrier" },
     { key: "status", label: "Status" },
     { key: "shipper", label: "Shipper" },
     { key: "receiver", label: "Receiver" },
@@ -20,67 +25,83 @@ const columns = [
     { key: "ata", label: "Actual Time of Arrival" },
 ];
 
-export default function ShipmentsPage() {
-    const [shipments, setShipments] = useState<any[]>([]);
+const ShipmentsPage = () => {
+    const [shipmentsData, setShipmentsData] = useState<shipments[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const { notifyError} = useNotifier();
     const rowsPerPage = 15;
+
+    const { notifyError } = useNotifier();
 
     useEffect(() => {
         const fetchShipments = async () => {
             try {
                 const res = await fetch("/api/shipments");
-                if (!res.ok) notifyError("Failed to fetch shipments");
+                if (!res.ok) {
+                    notifyError("Failed to fetch shipments");
+                    return;
+                }
                 const data = await res.json();
-                setShipments(data.shipments);
+                setShipmentsData(data.shipments);
             } catch (error) {
                 console.error(error);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchShipments().catch(err => console.error(err));
+        fetchShipments();
     }, []);
 
-    const searchedShipments = shipments.filter((shipment) =>
-        columns.some((column) => {
-            const value = shipment[column.key];
-            return value?.toString().toLowerCase().includes(search.toLowerCase());
-        })
+    function formatDate(date: Date | string | null): string {
+        if (!date) return "Not Defined";
+
+        let dateStr: string;
+        const parsedDate = new Date(date);
+
+        if (isNaN(parsedDate.getTime())) {
+            // Nije prepoznato kao datum => vratimo original, ali bez navodnika:
+            dateStr = date.toString().replace(/"/g, "");
+        } else {
+            // Jeste validan datum => formatiramo
+            const day = String(parsedDate.getUTCDate()).padStart(2, "0");
+            const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
+            const year = parsedDate.getUTCFullYear();
+
+            // Ako je vreme 00:00:00 => samo datum
+            if (
+                parsedDate.getUTCHours() === 0 &&
+                parsedDate.getUTCMinutes() === 0 &&
+                parsedDate.getUTCSeconds() === 0
+            ) {
+                dateStr = `${day}.${month}.${year}`;
+            } else {
+                const hours = String(parsedDate.getUTCHours()).padStart(2, "0");
+                const minutes = String(parsedDate.getUTCMinutes()).padStart(2, "0");
+                dateStr = `${day}.${month}.${year} ${hours}:${minutes}`;
+            }
+        }
+
+        // Za svaki slučaj, uklonite navodnike i iz formatiranog rezultata:
+        return dateStr.replace(/"/g, "");
+    }
+
+    // Filtriranje po search input-u
+    const searchedShipments = shipmentsData.filter((shipment) =>
+        columns.some((column) =>
+            shipment[column.key]
+                ?.toString()
+                .toLowerCase()
+                .includes(search.toLowerCase())
+        )
     );
 
+    // Paginacija
     const totalPages = Math.ceil(searchedShipments.length / rowsPerPage);
     const paginatedShipments = searchedShipments.slice(
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
     );
-    //Funcija za pokazivanje itema bez ""
-    const removeQuotes = (value: any): string =>
-        typeof value === "string" ? value.replace(/"/g, "") : value;
-
-    //Funcija za regulisanje ispravnog displaya datuma
-    const formatDate = (date: any): string => {
-        if (!date) return "Not Defined";
-        const parsedDate = new Date(date);
-        if (isNaN(parsedDate.getTime())) return date;
-
-        const day = String(parsedDate.getUTCDate()).padStart(2, "0");
-        const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
-        const year = parsedDate.getUTCFullYear();
-
-        if (parsedDate.getUTCHours() === 0 && parsedDate.getUTCMinutes() === 0 && parsedDate.getUTCSeconds() === 0) {
-            return `${day}.${month}.${year}`;
-        }
-
-        const hours = String(parsedDate.getUTCHours()).padStart(2, "0");
-        const minutes = String(parsedDate.getUTCMinutes()).padStart(2, "0");
-        return `${day}.${month}.${year} ${hours}:${minutes}`;
-    };
-
-
-    const formatValue = (value: any) => removeQuotes(formatDate(value));
 
     return (
         <div className="container mx-auto py-10">
@@ -89,7 +110,7 @@ export default function ShipmentsPage() {
                 <Input
                     placeholder="Search..."
                     value={search}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    onChange={(e) => {
                         setSearch(e.target.value);
                         setCurrentPage(1);
                     }}
@@ -100,34 +121,33 @@ export default function ShipmentsPage() {
                 </p>
             </div>
 
-            {/* Tabela sa podacima */}
             {isLoading ? (
                 <div className="space-y-4">
-                    <Skeleton className="h-8 w-full"/>
-                    <Skeleton className="h-8 w-full"/>
-                    <Skeleton className="h-8 w-full"/>
-                    <Skeleton className="h-8 w-full"/>
-                    <Skeleton className="h-8 w-full"/>
-                    <Skeleton className="h-8 w-full"/>
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
                 </div>
             ) : (
                 <Table>
-                    <TableHeaders columns={columns}/>
+                    <TableHeaders columns={columns} />
                     <TableRows
                         columns={columns}
                         shipments={paginatedShipments}
-                        formatValue={formatValue}
+                        formatDate={formatDate}
                     />
                 </Table>
             )}
 
-            {/* Paginacija */}
             <PaginationComponent
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                onPageChange={(page) => setCurrentPage(page)}
             />
         </div>
     );
+};
 
-}
+export default ShipmentsPage;

@@ -7,8 +7,15 @@ import {
     TableHead,
     TableCell,
 } from "@/components/ui/table"
+import { shipments } from "@prisma/client"
 
-export default async function ShipmentDetailPage({ params }: any) {
+type Props = {
+    params: {
+        id: string;
+    };
+}
+
+const ShipmentDetailPage = async ({ params }: Props) => {
     const shipment = await prisma.shipments.findUnique({
         where: { id: Number(params.id) },
     });
@@ -40,20 +47,18 @@ export default async function ShipmentDetailPage({ params }: any) {
         return `${day}.${month}.${year} ${hours}:${minutes}`;
     }
 
-    function removeQuotes(value: any): string {
+    function removeQuotes(value: shipments[keyof shipments]): string {
         if (typeof value === "string") {
-            return value.replace(/"/g, ""); // Capture the result and return it
+            return value.replace(/"/g, "");
         } else if (value === null) {
             return "Not Defined";
         } else {
-            return value.toString(); // Convert non-null, non-string types to string
+            return String(value);
         }
     }
 
-
-    // Podaci za tabelu spakovani u const
-    const shipmentDetails = [
-        { field: "Filename", value: shipment.filename },
+    const shipmentDetails: Array<{ field: string; value: string }> = [
+        { field: "Filename", value: removeQuotes(shipment.filename) },
         { field: "Carrier Type", value: removeQuotes(shipment.carrier_type) },
         { field: "Carrier", value: removeQuotes(shipment.carrier) },
         { field: "Status", value: removeQuotes(shipment.status) },
@@ -99,3 +104,5 @@ export default async function ShipmentDetailPage({ params }: any) {
         </div>
     );
 }
+
+export default ShipmentDetailPage;

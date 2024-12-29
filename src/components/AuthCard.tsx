@@ -4,16 +4,15 @@ import { ReactNode } from "react";
 import Image from "next/image";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
-interface AuthCardProps {
+type Props = {
     title: string;
     children: ReactNode;
     footerLink: {
         href: string;
         text: string;
-    };
-}
-
-export function AuthCard({ title, children, footerLink }: AuthCardProps) {
+    }
+};
+const AuthCard = ({ title, children, footerLink }: Props) => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-50">
             <Card className="w-full max-w-md">
@@ -32,4 +31,6 @@ export function AuthCard({ title, children, footerLink }: AuthCardProps) {
             </Card>
         </div>
     );
-}
+};
+export default AuthCard;
+

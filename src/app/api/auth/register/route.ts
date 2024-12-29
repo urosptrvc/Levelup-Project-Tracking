@@ -39,10 +39,12 @@ export async function POST(req: Request) {
             { message: "User created successfully", userId: newUser.id },
             { status: 201 }
         )
-    } catch (error: any) {
-        return NextResponse.json(
-            { error: error.message || "Something went wrong." },
-            { status: 500 }
-        )
+    } catch (error) {
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { error: error.message || "Something went wrong." },
+                { status: 500 }
+            )
+        }
     }
 }

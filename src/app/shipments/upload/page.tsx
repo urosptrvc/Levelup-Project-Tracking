@@ -8,7 +8,7 @@ import { CloudUpload, Loader2, FileText, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useNotifier } from "@/components/ui/use-notifications"
 
-export default function UploadShipmentsPage() {
+const UploadShipmentsPage = () => {
     const [file, setFile] = useState<File | null>(null)
     const [isLoading, setIsLoading] = useState(false)
     const { notifyError, notifySuccess } = useNotifier()
@@ -47,8 +47,10 @@ export default function UploadShipmentsPage() {
                 notifySuccess("Success", `Uploaded ${data.count} shipments successfully!`)
                 router.push("/shipments")
             }
-        } catch (error: any) {
-            notifyError("Upload Error", error.message)
+        } catch (error) {
+            if (error instanceof Error) {
+                notifyError("Upload Error", error.message)
+            }
         } finally {
             setIsLoading(false)
         }
@@ -118,3 +120,5 @@ export default function UploadShipmentsPage() {
             </div>
     )
 }
+
+export default UploadShipmentsPage;

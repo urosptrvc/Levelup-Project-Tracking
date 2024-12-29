@@ -4,7 +4,7 @@ import {FormEvent, ReactNode} from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-interface AuthFormProps {
+type Props = {
     fields: {
         type: string;
         placeholder: string;
@@ -16,7 +16,8 @@ interface AuthFormProps {
     extraFields?: ReactNode;
 }
 
-export function AuthForm({ fields, onSubmitAction, submitText, extraFields }: AuthFormProps) {
+
+const AuthForm = ({ fields, onSubmitAction, submitText, extraFields }: Props) => {
     return (
         <form onSubmit={onSubmitAction} className="space-y-4">
             {fields.map((field, index) => (
@@ -35,3 +36,5 @@ export function AuthForm({ fields, onSubmitAction, submitText, extraFields }: Au
         </form>
     );
 }
+
+export default AuthForm;

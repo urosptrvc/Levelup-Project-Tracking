@@ -9,7 +9,7 @@ import {
     TableCell,
 } from "@/components/ui/table";
 
-export default function Loading() {
+const Loading = () => {
     const skeletonRows = Array.from({ length: 10 });
 
     return (
@@ -38,3 +38,5 @@ export default function Loading() {
         </div>
     );
 }
+
+export default Loading;

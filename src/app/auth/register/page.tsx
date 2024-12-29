@@ -2,8 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AuthCard } from "@/components/AuthCard";
-import { AuthForm } from "@/components/AuthForm";
+import AuthCard from "@/components/AuthCard";
+import AuthForm from "@/components/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
