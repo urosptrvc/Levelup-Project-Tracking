@@ -52,7 +52,7 @@ const ShipmentsPage = () => {
         };
 
         fetchShipments();
-    }, [notifyError]);
+    }, []);
 
     const searchedShipments = shipmentsData.filter((shipment) =>
         columns.some((column) =>
