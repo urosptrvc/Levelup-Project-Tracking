@@ -137,7 +137,7 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │   ├── 📄 AuthCard.tsx <------- Komponenta za card login/register
     │   ├── 📄 AuthForm.tsx <------- Komponenta za polja login/register
     │   ├── 📄 Navbar.tsx <------- Komponenta za navbar
-    │   ├── 📄 PaginationComponent.tsx <------- Komponenta za paginaciju
+    │   ├── 📄 PaginationComponent.tsx.tsx <------- Komponenta za paginaciju
     │   ├── 📄 TableHeaders.tsx <------- Komponenta za zaglavlje tabele
     │   ├── 📄 TableRows.tsx <------- Komponenta za redove tabele
     │   ├── 📄 UploadLink.tsx <------- Komponenta za upload admin/user role

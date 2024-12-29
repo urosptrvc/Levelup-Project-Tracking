@@ -2,8 +2,10 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import * as XLSX from "xlsx";
 import { prisma } from "@/lib/prisma";
-import { carrierMappings } from "@/app/data/carrierMappings";
+import { carrierMappings } from "@/app/utils/carrierMappings";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+
 
 
 //UPLOAD PAGE ROUTING
@@ -184,11 +186,12 @@ export async function POST(request: Request) {
             message: "Data inserted successfully",
             count: result.count,
         });
-    } catch (error: any) {
-        console.error("Error processing file:", error);
-        return NextResponse.json(
-            { error: "Internal server error", details: error.message },
-            { status: 500 }
-        );
+    } catch (error) {
+        if (error instanceof Error) {
+            return NextResponse.json(
+                { error: error || "Internal server error." },
+                { status: 500 }
+            )
+        }
     }
 }

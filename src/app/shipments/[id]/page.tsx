@@ -7,80 +7,28 @@ import {
     TableHead,
     TableCell,
 } from "@/components/ui/table"
-import { shipments } from "@prisma/client"
+import { formatValue } from "@/app/utils/formatters";
 
 type Props = {
     params: {
-        id: string;
-    };
+        id: string
+    }
 }
 
 const ShipmentDetailPage = async ({ params }: Props) => {
     const shipment = await prisma.shipments.findUnique({
         where: { id: Number(params.id) },
-    });
+    })
 
     if (!shipment) {
         return (
             <div className="container mx-auto py-10">
                 <h1 className="text-2xl font-bold text-red-600">Shipment Not Found</h1>
             </div>
-        );
+        )
     }
 
-    function formatDate(date: Date | null): string {
-        if (!date) return "Not Defined";
-        if (date.getFullYear() === 1900 && date.getMonth() === 0 && date.getDate() === 1) {
-            return "Self-Delivery";
-        }
-
-        const day = String(date.getUTCDate()).padStart(2, "0");
-        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-        const year = date.getUTCFullYear();
-
-        if (date.getUTCHours() === 0 && date.getUTCMinutes() === 0 && date.getUTCSeconds() === 0) {
-            return `${day}.${month}.${year}`;
-        }
-
-        const hours = String(date.getUTCHours()).padStart(2, "0");
-        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-        return `${day}.${month}.${year} ${hours}:${minutes}`;
-    }
-
-    function removeQuotes(value: shipments[keyof shipments]): string {
-        if (typeof value === "string") {
-            return value.replace(/"/g, "");
-        } else if (value === null) {
-            return "Not Defined";
-        } else {
-            return String(value);
-        }
-    }
-
-    const shipmentDetails: Array<{ field: string; value: string }> = [
-        { field: "Filename", value: removeQuotes(shipment.filename) },
-        { field: "Carrier Type", value: removeQuotes(shipment.carrier_type) },
-        { field: "Carrier", value: removeQuotes(shipment.carrier) },
-        { field: "Status", value: removeQuotes(shipment.status) },
-        { field: "House AWB", value: removeQuotes(shipment.house_awb) },
-        { field: "Shipper", value: removeQuotes(shipment.shipper) },
-        { field: "Shipper Country", value: removeQuotes(shipment.shipper_country) },
-        { field: "Receiver", value: removeQuotes(shipment.receiver) },
-        { field: "Receiver Country", value: removeQuotes(shipment.receiver_country) },
-        { field: "PO number", value: removeQuotes(shipment.po_number) },
-        { field: "Packages", value: removeQuotes(shipment.packages) },
-        { field: "Weight", value: removeQuotes(shipment.weight) },
-        { field: "Volume", value: removeQuotes(shipment.volume) },
-        { field: "ETA (Estimated Time of Arrival)", value: formatDate(shipment.eta) },
-        { field: "ETD (Estimated Time of Departure)", value: formatDate(shipment.etd) },
-        { field: "ATD (Actual Time of Departure)", value: formatDate(shipment.atd) },
-        { field: "ATA (Actual Time of Arrival)", value: formatDate(shipment.ata) },
-        { field: "Vessel/Flight", value: removeQuotes(shipment.vessel_flight) },
-        { field: "Pickup Date", value: formatDate(shipment.pickup_date) },
-        { field: "Latest Checkpoint", value: removeQuotes(shipment.latest_cp) },
-        { field: "Shipper Ref No", value: removeQuotes(shipment.shipper_ref_no) },
-        { field: "Inco Term", value: removeQuotes(shipment.inco_term) },
-    ];
+    const entries = Object.entries(shipment)
 
     return (
         <div className="container mx-auto py-10">
@@ -93,16 +41,24 @@ const ShipmentDetailPage = async ({ params }: Props) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {shipmentDetails.map((detail, index) => (
-                        <TableRow key={index}>
-                            <TableCell>{detail.field}</TableCell>
-                            <TableCell>{detail.value}</TableCell>
+                    {entries.map(([key, value]) => (
+                        <TableRow key={key}>
+                            <TableCell>{formatKey(key)}</TableCell>
+                            <TableCell>{formatValue(value)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
         </div>
-    );
+    )
 }
 
-export default ShipmentDetailPage;
+
+function formatKey(key: string): string {
+    return key
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, char => char.toUpperCase())
+        .replace(/Id\b/, "ID")
+}
+
+export default ShipmentDetailPage

@@ -9,6 +9,7 @@ generator client {
 
 model shipments {
   id               Int       @id @default(autoincrement())
+  filename         String?   @db.Text
   carrier_type     String?   @db.Text
   status           String?   @db.Text
   house_awb        String?   @db.Text
@@ -24,7 +25,6 @@ model shipments {
   latest_cp        String?   @db.Text
   shipper_ref_no   String?   @db.Text
   inco_term        String?   @db.Text
-  filename         String?   @db.Text
   packages         Int?
   etd              DateTime?
   eta              DateTime?

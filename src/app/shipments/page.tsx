@@ -1,16 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table } from "@/components/ui/table";
-import TableRows from "@/components/TableRows";
-import TableHeaders from "@/components/TableHeaders";
-import PaginationComponent from "@/components/PaginationComponent";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNotifier } from "@/components/ui/use-notifications";
 import { shipments } from "@prisma/client";
+import {useNotifier} from "@/components/ui/use-notifications"
+import Link from "next/link";
+import { formatValue } from "@/app/utils/formatters";
+import PaginationComponent from "@/components/PaginationComponent";
 
-// Tip za kolone
+
 type Column = {
     key: keyof shipments;
     label: string;
@@ -30,19 +37,17 @@ const ShipmentsPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const { notifyError} = useNotifier();
     const rowsPerPage = 15;
-
-    const { notifyError } = useNotifier();
 
     useEffect(() => {
         const fetchShipments = async () => {
             try {
                 const res = await fetch("/api/shipments");
-                if (!res.ok) {
-                    notifyError("Failed to fetch shipments");
-                    return;
-                }
                 const data = await res.json();
+                if (!res.ok) {
+                    notifyError("Error",data.error);
+                }
                 setShipmentsData(data.shipments);
             } catch (error) {
                 console.error(error);
@@ -50,53 +55,16 @@ const ShipmentsPage = () => {
                 setIsLoading(false);
             }
         };
-        fetchShipments();
+
+        fetchShipments()
     }, []);
 
-    function formatDate(date: Date | string | null): string {
-        if (!date) return "Not Defined";
-
-        let dateStr: string;
-        const parsedDate = new Date(date);
-
-        if (isNaN(parsedDate.getTime())) {
-            // Nije prepoznato kao datum => vratimo original, ali bez navodnika:
-            dateStr = date.toString().replace(/"/g, "");
-        } else {
-            // Jeste validan datum => formatiramo
-            const day = String(parsedDate.getUTCDate()).padStart(2, "0");
-            const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
-            const year = parsedDate.getUTCFullYear();
-
-            // Ako je vreme 00:00:00 => samo datum
-            if (
-                parsedDate.getUTCHours() === 0 &&
-                parsedDate.getUTCMinutes() === 0 &&
-                parsedDate.getUTCSeconds() === 0
-            ) {
-                dateStr = `${day}.${month}.${year}`;
-            } else {
-                const hours = String(parsedDate.getUTCHours()).padStart(2, "0");
-                const minutes = String(parsedDate.getUTCMinutes()).padStart(2, "0");
-                dateStr = `${day}.${month}.${year} ${hours}:${minutes}`;
-            }
-        }
-
-        // Za svaki slučaj, uklonite navodnike i iz formatiranog rezultata:
-        return dateStr.replace(/"/g, "");
-    }
-
-    // Filtriranje po search input-u
     const searchedShipments = shipmentsData.filter((shipment) =>
         columns.some((column) =>
-            shipment[column.key]
-                ?.toString()
-                .toLowerCase()
-                .includes(search.toLowerCase())
+            shipment[column.key]?.toString().toLowerCase().includes(search.toLowerCase())
         )
     );
 
-    // Paginacija
     const totalPages = Math.ceil(searchedShipments.length / rowsPerPage);
     const paginatedShipments = searchedShipments.slice(
         (currentPage - 1) * rowsPerPage,
@@ -105,8 +73,7 @@ const ShipmentsPage = () => {
 
     return (
         <div className="container mx-auto py-10">
-            {/* Search input */}
-            <div className="mb-4 gap-4 flex flex-wrap items-center">
+            <div className="mb-4 flex flex-wrap items-center gap-4">
                 <Input
                     placeholder="Search..."
                     value={search}
@@ -116,38 +83,47 @@ const ShipmentsPage = () => {
                     }}
                     className="w-1/3 md:w-1/2"
                 />
-                <p className="text-slate-400">
-                    For Date search must type in format YYYY-MM-DD
-                </p>
+                <p className="text-slate-400">For Date search, use format YYYY-MM-DD</p>
             </div>
 
             {isLoading ? (
                 <div className="space-y-4">
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-full" />
-                    <Skeleton className="h-8 w-full" />
+                    {[...Array(6)].map((_, i) => (
+                        <Skeleton key={i} className="h-8 w-full" />
+                    ))}
                 </div>
             ) : (
                 <Table>
-                    <TableHeaders columns={columns} />
-                    <TableRows
-                        columns={columns}
-                        shipments={paginatedShipments}
-                        formatDate={formatDate}
-                    />
+                    <TableHeader>
+                        <TableRow>
+                            {columns.map((column) => (
+                                <TableHead key={column.key}>{column.label}</TableHead>
+                            ))}
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {paginatedShipments.map((shipment) => (
+                            <TableRow key={shipment.id}>
+                                {columns.map((column) => (
+                                    <TableCell key={column.key}>
+                                            <Link href={`/shipments/${shipment.id}`}>
+                                                {formatValue(shipment[column.key] as Date | string | number)}
+                                            </Link>
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
                 </Table>
             )}
-
             <PaginationComponent
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={(page) => setCurrentPage(page)}
+                onPageChange={setCurrentPage}
             />
         </div>
     );
 };
+
 
 export default ShipmentsPage;

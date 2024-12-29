@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, {ChangeEvent, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,10 +14,11 @@ const UploadShipmentsPage = () => {
     const { notifyError, notifySuccess } = useNotifier()
     const router = useRouter()
 
-    // Handler za promenu fajla - postavlja selektovani fajl u state
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files?.[0]) setFile(e.target.files[0])
-    }
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
+    };
 
     // Glavna funkcija za upload fajla
     const uploadFile = async () => {
@@ -42,14 +43,14 @@ const UploadShipmentsPage = () => {
             // Parsiranje odgovora
             const data = await res.json()
             if (!res.ok) {
-                notifyError("Upload Failed", data.error || "Something went wrong")
+                notifyError("Error", data.error)
             } else {
                 notifySuccess("Success", `Uploaded ${data.count} shipments successfully!`)
                 router.push("/shipments")
             }
         } catch (error) {
             if (error instanceof Error) {
-                notifyError("Upload Error", error.message)
+                notifyError("Error", error.message)
             }
         } finally {
             setIsLoading(false)
