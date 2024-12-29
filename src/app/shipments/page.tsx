@@ -1,22 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { shipments } from "@prisma/client";
-import {useNotifier} from "@/components/ui/use-notifications"
-import Link from "next/link";
-import { formatValue } from "@/app/utils/formatters";
-import PaginationComponent from "@/components/PaginationComponent";
+import { useNotifier } from "@/components/ui/use-notifications";
+import { useRouter } from "next/navigation";
 
+import PaginationComponent from "@/components/PaginationComponent";
+import DataTable from "@/components/DataTable";
 
 type Column = {
     key: keyof shipments;
@@ -37,8 +29,9 @@ const ShipmentsPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [search, setSearch] = useState<string>("");
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const { notifyError} = useNotifier();
+    const { notifyError } = useNotifier();
     const rowsPerPage = 15;
+    const router = useRouter();
 
     useEffect(() => {
         const fetchShipments = async () => {
@@ -46,18 +39,20 @@ const ShipmentsPage = () => {
                 const res = await fetch("/api/shipments");
                 const data = await res.json();
                 if (!res.ok) {
-                    notifyError("Error",data.error);
+                    notifyError("Error", data.error || "Failed to fetch shipments.");
+                } else {
+                    setShipmentsData(data.shipments || []);
                 }
-                setShipmentsData(data.shipments);
             } catch (error) {
+                notifyError("Error", "An unexpected error occurred.");
                 console.error(error);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchShipments()
-    }, []);
+        fetchShipments();
+    }, [notifyError]);
 
     const searchedShipments = shipmentsData.filter((shipment) =>
         columns.some((column) =>
@@ -70,6 +65,10 @@ const ShipmentsPage = () => {
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
     );
+
+    const handleRowClick = (id: number) => {
+        router.push(`/shipments/${id}`);
+    };
 
     return (
         <div className="container mx-auto py-10">
@@ -93,28 +92,11 @@ const ShipmentsPage = () => {
                     ))}
                 </div>
             ) : (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            {columns.map((column) => (
-                                <TableHead key={column.key}>{column.label}</TableHead>
-                            ))}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {paginatedShipments.map((shipment) => (
-                            <TableRow key={shipment.id}>
-                                {columns.map((column) => (
-                                    <TableCell key={column.key}>
-                                            <Link href={`/shipments/${shipment.id}`}>
-                                                {formatValue(shipment[column.key] as Date | string | number)}
-                                            </Link>
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <DataTable
+                    data={paginatedShipments}
+                    columns={columns}
+                    onRowClick={handleRowClick}
+                />
             )}
             <PaginationComponent
                 currentPage={currentPage}
@@ -124,6 +106,5 @@ const ShipmentsPage = () => {
         </div>
     );
 };
-
 
 export default ShipmentsPage;
