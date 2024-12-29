@@ -117,13 +117,14 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │   │   │   └── 📄 page.tsx <------- Login stranica
     │   │   └── 📂 register
     │   │       └── 📄 page.tsx <------- Register stranica
-    │   ├── 📂 data
-    │   │   └── 📄 carrierMappings.ts <------- Mapiranje u zavisnosti koji je carrier
+    │   ├── 📂 types
+    │   │   ├── 📄 carrierMappings.ts <------- Izbor tipa mapiranja
+    │   │   └── 📄 formatters.ts <------- Funkcija za display datuma i stringovanje
     │   ├── 📄 favicon.ico
     │   ├── 📄 globals.css
     │   ├── 📄 layout.tsx
     │   ├── 📄 page.tsx
-    │   ├── 📄 providers.tsx
+    │   ├── 📄 providers.tsx <------- NextAuth Session Provider
     │   ├── 📂 shipments
     │   │   ├── 📄 page.tsx <------- Stranica shipments, pocetna
     │   │   ├── 📂 upload
@@ -132,14 +133,12 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │   │       ├── 📄 loading.tsx <------- Skeleton pri ucitavanju page.tsx
     │   │       └── 📄 page.tsx <------- Redirect stranica sa shipments
     │   └── 📂 types
-    │       └── 📄 next-auth.d.ts <------- Prosireni interfejsi za auth
+    │       └── 📄 next-auth.d.ts <------- Prosireni interfejsi za auth zbog rola
     ├── 📂 components
     │   ├── 📄 AuthCard.tsx <------- Komponenta za card login/register
     │   ├── 📄 AuthForm.tsx <------- Komponenta za polja login/register
     │   ├── 📄 Navbar.tsx <------- Komponenta za navbar
-    │   ├── 📄 PaginationComponent.tsx.tsx <------- Komponenta za paginaciju
-    │   ├── 📄 TableHeaders.tsx <------- Komponenta za zaglavlje tabele
-    │   ├── 📄 TableRows.tsx <------- Komponenta za redove tabele
+    │   ├── 📄 PaginationComponent.tsx <------- Komponenta za paginaciju
     │   ├── 📄 UploadLink.tsx <------- Komponenta za upload admin/user role
     │   ├── 📂 ui <------- Shadcn/ui komponente
     │   │   ├── 📄 button.tsx
