@@ -5,13 +5,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { formatValue } from "@/app/utils/formatters";
 
 type Props = {
-    data?: Record<string, any>[]; 
+    data?: Record<string, string>[];
     columns: { key: string; label: string }[];
-    onRowClick?: (id: number) => void;
+    onRowClick?: (id: string) => void;
 };
 
 const DataTable = ({ data = [], columns, onRowClick }: Props) => {
-    const handleRowClick = (id: number) => {
+    const handleRowClick = (id: string) => {
         if (onRowClick) {
             onRowClick(id);
         }

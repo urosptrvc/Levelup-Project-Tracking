@@ -11,7 +11,7 @@ const columns = [
     { key: "field", label: "Field" },
     { key: "value", label: "Value" },
 ];
-
+export const dynamic = "force-dynamic";
 const ShipmentDetailPage = async ({ params }: Props) => {
     const shipment = await prisma.shipments.findUnique({
         where: { id: Number(params.id) },
@@ -27,7 +27,7 @@ const ShipmentDetailPage = async ({ params }: Props) => {
 
     const data = Object.entries(shipment).map(([key, value]) => ({
         field: formatKey(key),
-        value: value,
+        value: String(value),
     }));
 
 
@@ -35,7 +35,7 @@ const ShipmentDetailPage = async ({ params }: Props) => {
         <div className="container mx-auto py-10">
             <h1 className="text-2xl font-bold mb-6">Shipment Details</h1>
             <DataTable 
-                data={data} 
+                data={data}
                 columns={columns} 
             />
         </div>

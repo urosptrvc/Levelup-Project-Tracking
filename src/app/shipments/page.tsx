@@ -2,12 +2,12 @@
 
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import PaginationComponent from "@/components/PaginationComponent";
 import DataTable from "@/components/DataTable";
 import { shipments } from "@prisma/client";
+import SkeletonWrapper from "@/components/SkeletonWrapper";
 
 type Column = {
   key: keyof shipments;
@@ -29,7 +29,7 @@ const ShipmentsPage = () => {
     const rowsPerPage = 15;
     const router = useRouter();
   
-    const { data, isLoading } = useQuery<any>({
+    const { data, isFetching} = useQuery({
       queryKey: ["shipments"],
       queryFn: () => fetch("/api/shipments").then((res) => res.json()),
     });
@@ -49,45 +49,41 @@ const ShipmentsPage = () => {
       currentPage * rowsPerPage
     );
   
-    const handleRowClick = (id: number) => {
+    const handleRowClick = (id: string) => {
       router.push(`/shipments/${id}`);
     };
   
   
     return (
-      <div className="container mx-auto py-10">
-        <div className="mb-4 flex flex-wrap items-center gap-4">
-          <Input
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-1/3 md:w-1/2"
-          />
-          <p className="text-slate-400">For Date search, use format YYYY-MM-DD</p>
-        </div>
-  
-        {isLoading ? (
-          <div className="space-y-4">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-8 w-full" />
-            ))}
-          </div>
-        ) : (
-          <DataTable
-            data={paginatedShipments}
-            columns={columns}
-            onRowClick={handleRowClick}
-          />
-        )}
-        <PaginationComponent
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+
+            <div className="container mx-auto py-10">
+                <div className="mb-4 flex flex-wrap items-center gap-4">
+
+                <Input
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => {
+                    setSearch(e.target.value);
+                    setCurrentPage(1);
+                    }}
+                    className="w-1/3 md:w-1/2"
+                />
+                <p className="text-slate-400">For Date search, use format YYYY-MM-DD</p>
+                </div>
+            <SkeletonWrapper isLoading={isFetching} rows={rowsPerPage}>
+                <DataTable
+                    data={paginatedShipments}
+                    columns={columns}
+                    onRowClick={handleRowClick}
+                />
+
+                <PaginationComponent
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                />
+            </SkeletonWrapper>
+            </div>
     );
   };
   
