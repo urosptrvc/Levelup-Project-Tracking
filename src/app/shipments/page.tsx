@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import PaginationComponent from "@/components/PaginationComponent";
 import DataTable from "@/components/DataTable";
-import { shipments } from "@prisma/client";
+import { shipments } from "@/lib/prisma";
 import SkeletonWrapper from "@/components/SkeletonWrapper";
 
 
