@@ -5,21 +5,22 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Providers from "@/app/providers";
 
+
 export const metadata: Metadata = {
     title: "The Track Meister",
     description: "Levelup Project Tracking Mapping Data",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     return (
-        <html lang="en">
-            <body>
-                <Toaster />
-                    <Providers>
-                        <Navbar />
-                            <main>{children}</main>
-                    </Providers>
-            </body>
+        <html lang="en" suppressHydrationWarning>
+        <body>
+        <Toaster />
+            <Providers>
+                <Navbar />
+                <main>{children}</main>
+            </Providers>
+        </body>
         </html>
     );
 }

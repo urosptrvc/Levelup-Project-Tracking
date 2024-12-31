@@ -15,6 +15,7 @@ import {
     DialogTitle,
     DialogFooter, DialogDescription,
 } from "@/components/ui/dialog";
+import { ThemeSwitcherBtn } from "@/components/ThemeSwitcherBtn";
 
 const Navbar = () => {
     const { notifySuccess } = useNotifier();
@@ -39,24 +40,32 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="border-b bg-white shadow">
-                <div className="container mx-auto flex justify-between items-center py-4 px-6">
-                    <div className="flex items-center justify-between">
-                        <Link href="/shipments">
-                            <div className="flex items-center space-x-4">
-                                <Image src="/favicon.ico" alt="Logo" width={50} height={50} />
-                                <h1 className="text-xl font-bold text-gray-800">The Track Meister</h1>
-                            </div>
+            <nav className="border-b shadow">
+                <div className="container mx-auto flex items-center py-4 px-6">
+                    {/* Left Section */}
+                    <div className="flex items-center space-x-3">
+                        <ThemeSwitcherBtn/>
+                        <span className="text-sm">Change Theme</span>
+                    </div>
+
+                    {/* Center Section */}
+                    <div className="flex flex-grow justify-center items-center flex-col">
+                        <Link href="/shipments" legacyBehavior>
+                            <a className="flex flex-col items-center hover:opacity-90 transition-opacity">
+                                <Image src="/favicon.ico" alt="Logo" width={50} height={50}/>
+                                <h1 className="text-xl font-bold mt-2">The Track Meister</h1>
+                            </a>
                         </Link>
                     </div>
 
+                    {/* Right Section */}
                     <div className="flex items-center space-x-6">
                         <Link href="/shipments">
                             <Button variant="ghost" className="text-sm">
                                 Overview
                             </Button>
                         </Link>
-                        <UploadLink />
+                        <UploadLink/>
                         <Button variant="destructive" onClick={openModal}>
                             Logout
                         </Button>

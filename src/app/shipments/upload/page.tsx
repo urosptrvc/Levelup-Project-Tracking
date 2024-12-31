@@ -68,10 +68,10 @@ const UploadShipmentsPage = () => {
                             {/* Drag & drop funkcionalnosti */}
                             <label
                                 htmlFor="file"
-                                className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50 transition"
+                                className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-200 transition"
                             >
-                                <CloudUpload className="w-8 h-8 text-gray-500 mb-2"/>
-                                <span className="text-sm text-gray-600">
+                                <CloudUpload className="w-8 h-8  mb-2"/>
+                                <span className="text-sm">
                                 {file ? file.name : "Click to select or drag a file here"}
                             </span>
                                 {/* Skriveni input za file upload */}
@@ -86,10 +86,10 @@ const UploadShipmentsPage = () => {
 
                             {/* Prikaz selektovanog fajla*/}
                             {file && (
-                                <div className="flex items-center justify-between w-full px-2 py-1 bg-gray-100 rounded-md">
+                                <div className="flex items-center justify-between w-full px-2 py-1 rounded-md">
                                     <div className="flex items-center space-x-2">
-                                        <FileText className="text-gray-500"/>
-                                        <span className="text-sm text-gray-700">{file.name}</span>
+                                        <FileText className=""/>
+                                        <span className="text-sm ">{file.name}</span>
                                     </div>
                                     <button
                                         onClick={() => setFile(null)}

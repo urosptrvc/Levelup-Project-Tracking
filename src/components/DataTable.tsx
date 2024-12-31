@@ -41,7 +41,7 @@ const DataTable = ({ data = [], columns, onRowClick }: Props) => {
             <TableBody>
                 {data.map((row, rowIndex) => (
                     <TableRow
-                        key={row.id || `row-${rowIndex}`} // Dodaj rezervni key koristeći rowIndex ako row.id nije dostupan
+                        key={row.id || `row-${rowIndex}`}
                         data-id={row.id || `row-${rowIndex}`}
                         onClick={() =>
                             row.id &&

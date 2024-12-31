@@ -7,7 +7,7 @@ import AuthForm from "@/components/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
-export default function RegisterPage() {
+const RegisterPage = () => {
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -76,3 +76,5 @@ export default function RegisterPage() {
         </AuthCard>
     );
 }
+
+export default RegisterPage;

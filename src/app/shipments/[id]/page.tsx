@@ -13,9 +13,9 @@ const columns = [
 ];
 
 const ShipmentDetailPage = async ({ params }: Props) => {
-    const shipmentId = parseInt(params.id, 10); 
+    const { id } = await params;
     const shipment = await prisma.shipments.findUnique({
-        where: { id: shipmentId },
+        where: { id: Number(id) },
     });
 
     if (!shipment) {
