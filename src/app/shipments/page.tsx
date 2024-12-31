@@ -9,10 +9,16 @@ import DataTable from "@/components/DataTable";
 import { shipments } from "@prisma/client";
 import SkeletonWrapper from "@/components/SkeletonWrapper";
 
+
+interface ShipmentsArray {
+  shipments: shipments[];
+}
+
 type Column = {
   key: keyof shipments;
   label: string;
 };
+
 
 const columns: Column[] = [
   { key: "carrier_type", label: "Carrier Type" },
@@ -28,8 +34,7 @@ const ShipmentsPage = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const rowsPerPage = 15;
     const router = useRouter();
-  
-    const { data, isFetching} = useQuery({
+    const { data, isFetching} = useQuery<ShipmentsArray>({
       queryKey: ["shipments"],
       queryFn: () => fetch("/api/shipments").then((res) => res.json()),
     });

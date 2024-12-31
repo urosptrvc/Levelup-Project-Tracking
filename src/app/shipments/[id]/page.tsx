@@ -11,10 +11,11 @@ const columns = [
     { key: "field", label: "Field" },
     { key: "value", label: "Value" },
 ];
-export const dynamic = "force-dynamic";
+
 const ShipmentDetailPage = async ({ params }: Props) => {
+    const shipmentId = parseInt(params.id, 10); 
     const shipment = await prisma.shipments.findUnique({
-        where: { id: Number(params.id) },
+        where: { id: shipmentId },
     });
 
     if (!shipment) {
