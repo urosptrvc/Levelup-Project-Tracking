@@ -1,35 +1,32 @@
 "use client";
 
-import {FormEvent, useEffect, useState} from "react";
+import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import AuthCard from "@/components/AuthCard";
 import AuthForm from "@/components/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
+import { useRouter } from "next/navigation";
+import LoadSpinner from "@/components/LoadSpinner";
 
-
-const LoginPage = () =>  {
+const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const { notifyError, notifySuccess } = useNotifier();
     const router = useRouter();
-    const { status } = useSession();
 
-    useEffect(() => {
-        if (status === "authenticated") {
-            router.push("/shipments");
-        }
-    }, [status, router]);
 
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
 
         const result = await signIn("credentials", {
             email,
             password,
             redirect: false,
         });
+
+        setIsLoading(false);
 
         if (result?.error) {
             notifyError("Error", result.error);
@@ -44,27 +41,28 @@ const LoginPage = () =>  {
             title="Login"
             footerLink={{ href: "/auth/register", text: "Don't have an account? Click here to register." }}
         >
-            <AuthForm
-                fields={[
-                    {
-                        type: "email",
-                        placeholder: "Email",
-                        value: email,
-                        setValue: setEmail,
-                    },
-                    {
-                        type: "password",
-                        placeholder: "Password",
-                        value: password,
-                        setValue: setPassword,
-                    },
-                ]}
-                onSubmitAction={handleLogin}
-                submitText="Login"
-            />
+            <LoadSpinner isLoading={isLoading}>
+                <AuthForm
+                    fields={[
+                        {
+                            type: "email",
+                            placeholder: "Email",
+                            value: email,
+                            setValue: setEmail,
+                        },
+                        {
+                            type: "password",
+                            placeholder: "Password",
+                            value: password,
+                            setValue: setPassword,
+                        },
+                    ]}
+                    onSubmitAction={handleLogin}
+                    submitText="Login"
+                />
+            </LoadSpinner>
         </AuthCard>
     );
-}
+};
 
 export default LoginPage;
-

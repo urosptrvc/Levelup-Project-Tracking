@@ -6,6 +6,7 @@ import AuthCard from "@/components/AuthCard";
 import AuthForm from "@/components/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import LoadSpinner from "@/components/LoadSpinner";
 
 const RegisterPage = () => {
     const router = useRouter();
@@ -14,9 +15,11 @@ const RegisterPage = () => {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState("");
     const { notifyError, notifySuccess } = useNotifier();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleRegister = async (e: FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
 
         const res = await fetch("/api/auth/register", {
             method: "POST",
@@ -24,6 +27,7 @@ const RegisterPage = () => {
             body: JSON.stringify({ email, password, name, role }),
         });
         const data = await res.json();
+        setIsLoading(false);
         if (!res.ok) {
             notifyError("Error", data.error);
             return;
@@ -38,6 +42,7 @@ const RegisterPage = () => {
             title="Register"
             footerLink={{ href: "/auth/login", text: "Already have an account? Click here to login." }}
         >
+            <LoadSpinner isLoading={isLoading}>
             <AuthForm
                 fields={[
                     {
@@ -73,6 +78,7 @@ const RegisterPage = () => {
                 onSubmitAction={handleRegister}
                 submitText="Register"
             />
+            </LoadSpinner>
         </AuthCard>
     );
 }
