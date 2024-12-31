@@ -143,6 +143,7 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │   ├── 📄 PaginationComponent.tsx <------- Komponenta za paginaciju
     │   ├── 📄 UploadLink.tsx <------- Komponenta za upload admin/user role
     │   ├── 📄 ThemeSwitcherBtn.tsx <------- Dropdown komponenta za switch theme
+    │   ├── 📄 LoadSpinner.tsx <------- Loading animacija
     │   ├── 📂 ui <------- Shadcn/ui komponente
     │   │   ├── 📄 button.tsx
     │   │   ├── 📄 card.tsx

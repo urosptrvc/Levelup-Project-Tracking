@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import DataTable from "@/components/DataTable";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Props = {
     params: {
@@ -31,21 +32,22 @@ const ShipmentDetailPage = async ({ params }: Props) => {
         value: String(value),
     }));
 
-
     return (
         <div className="container mx-auto py-10">
             <h1 className="text-2xl font-bold mb-6">Shipment Details</h1>
-            <DataTable 
-                data={data}
-                columns={columns} 
-            />
+            <ScrollArea className="h-[550px] rounded-md border p-4">
+                <DataTable
+                    data={data}
+                    columns={columns}
+                />
+            </ScrollArea>
         </div>
     );
 };
 
 function formatKey(key: string): string {
     return key
-        .replace(/_/g, " ") 
+        .replace(/_/g, " ")
         .replace(/\b\w/g, char => char.toUpperCase())
         .replace(/Id\b/, "ID");
 }

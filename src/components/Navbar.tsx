@@ -42,14 +42,13 @@ const Navbar = () => {
         <>
             <nav className="border-b shadow">
                 <div className="container mx-auto flex items-center py-4 px-6">
-                    {/* Left Section */}
-                    <div className="flex items-center space-x-3">
+
+                    <div className="flex items-center space-x-3 flex-1">
                         <ThemeSwitcherBtn/>
                         <span className="text-sm">Change Theme</span>
                     </div>
 
-                    {/* Center Section */}
-                    <div className="flex flex-grow justify-center items-center flex-col">
+                    <div className="flex justify-center items-center flex-1">
                         <Link href="/shipments" legacyBehavior>
                             <a className="flex flex-col items-center hover:opacity-90 transition-opacity">
                                 <Image src="/favicon.ico" alt="Logo" width={50} height={50}/>
@@ -58,8 +57,7 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Right Section */}
-                    <div className="flex items-center space-x-6">
+                    <div className="flex items-center space-x-6 flex-1 justify-end">
                         <Link href="/shipments">
                             <Button variant="ghost" className="text-sm">
                                 Overview

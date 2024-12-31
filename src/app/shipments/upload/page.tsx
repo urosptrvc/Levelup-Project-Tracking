@@ -4,9 +4,10 @@ import React, {ChangeEvent, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CloudUpload, Loader2, FileText, XCircle } from "lucide-react"
+import { CloudUpload, FileText, XCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useNotifier } from "@/components/ui/use-notifications"
+import LoadSpinner from "@/components/LoadSpinner";
 
 const UploadShipmentsPage = () => {
     const [file, setFile] = useState<File | null>(null)
@@ -83,7 +84,7 @@ const UploadShipmentsPage = () => {
                                     className="hidden"
                                 />
                             </label>
-
+                            <LoadSpinner isLoading={isLoading}>
                             {/* Prikaz selektovanog fajla*/}
                             {file && (
                                 <div className="flex items-center justify-between w-full px-2 py-1 rounded-md">
@@ -105,16 +106,9 @@ const UploadShipmentsPage = () => {
                                 onClick={uploadFile}
                                 disabled={!file || isLoading}
                                 className="w-full"
-                            >
-                                {isLoading ? (
-                                    <span className="flex items-center">
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin"/>
-                                    Uploading...
-                                </span>
-                                ) : (
-                                    "Upload & Process"
-                                )}
+                            > Upload & Process
                             </Button>
+                            </LoadSpinner>
                         </div>
                     </CardContent>
                 </Card>

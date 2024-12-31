@@ -32,11 +32,14 @@ export function formatDate(date: Date | string | number): string {
 }
 
 export function formatValue(value: unknown): string {
+
+    if(value === Int)
     if (typeof value === "string" || value instanceof Date) {
         return formatDate(value);
     }
-    if (value == null) {
+    if (typeof value === null) {
         return "Not Defined";
     }
+
     return String(value);
 }
