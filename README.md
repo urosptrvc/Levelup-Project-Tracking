@@ -9,7 +9,8 @@ Ova aplikacija omogućava korisnicima da učitavaju XLSX fajlove koji sadrže po
 - Učitavanje XLSX fajlova: Korisnici mogu upload-ovati fajlove.
 - Obrada podataka: Aplikacija obrađuje podatke koristeći prilagođene mapiranja za različite kurirske službe.
 - Prikaz podataka: Podaci se prikazuju u tabelarnom obliku sa mogućnostima paginacije i pretrage.
-
+- Mogućnost odabira role pri registraciji (User/Admin), User nema mogućstvo upload i brisanja fajlova.
+- 
 ## Tehnologije korišćene
 
  - Next.js – Framework za izradu React aplikacija.
@@ -20,7 +21,7 @@ Ova aplikacija omogućava korisnicima da učitavaju XLSX fajlove koji sadrže po
  - Prisma – ORM alat za rad sa bazama podataka.
  - XLSX.js – Biblioteka za obradu Excel fajlova.
  - API rute – Backend servisi za učitavanje i obradu podataka.
-
+ - TanStack Query - Query za get, Mutacije za delete-post-update na client komponentama.
 
 ## Instalacija i pokretanje projekta
 
@@ -61,7 +62,7 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
 
 ## PDF Dokumentacija
 
-[GitDokumentacija](https://github.com/urosptrvc/Levelup-Project-Tracking/blob/master/Dokumentacija.pdf) ili [OnlineDokumentacija](https://smallpdf.com/file#s=be9064b8-f96a-4fa5-a257-4f163aebe2de)
+[GitDokumentacija](https://github.com/urosptrvc/Levelup-Project-Tracking/blob/master/Dokumentacija.pdf) ili [OnlineDokumentacija](https://pdfupload.io/docs/2ebf6b9b)
 
 ## Struktura projekta
 ```bash

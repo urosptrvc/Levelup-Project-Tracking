@@ -70,8 +70,11 @@ export function DataTable<TData, TValue>({
                         onChange={(event) => setGlobalFilter(event.target.value)}
                         className="max-w-sm"
                     />
+                    <p className="w-full text-opacity-50 pl-4 whitespace-nowrap">
+                        Date search must be in format YYYY-MM-DD
+                    </p>
                 </div>
-                <DataTableViewOptions table={table} />
+                <DataTableViewOptions table={table}/>
             </div>
             <div className="rounded-md border">
                 <Table>
