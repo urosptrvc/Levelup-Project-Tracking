@@ -21,9 +21,9 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/components/table/DataTableViewOptions";
 import {DataTablePagination} from "@/components/table/DataTablePagination";
+import SearchComp from "./SearchComp";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -35,7 +35,6 @@ export function DataTable<TData, TValue>({
                                              data,
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = useState<SortingState>([]);
-    const [globalFilter, setGlobalFilter] = useState("");
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         {}
     );
@@ -46,7 +45,6 @@ export function DataTable<TData, TValue>({
         columns,
         state: {
             sorting,
-            globalFilter,
             columnVisibility,
             rowSelection,
         },
@@ -56,7 +54,6 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        onGlobalFilterChange: setGlobalFilter,
         onRowSelectionChange: setRowSelection,
     });
 
@@ -64,12 +61,7 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center py-4">
-                    <Input
-                        placeholder="Search all columns..."
-                        value={globalFilter ?? ""}
-                        onChange={(event) => setGlobalFilter(event.target.value)}
-                        className="max-w-sm"
-                    />
+                    <SearchComp placeholder="Search all columns.."/>
                     <p className="w-full text-opacity-50 pl-4 whitespace-nowrap">
                         Date search must be in format YYYY-MM-DD
                     </p>

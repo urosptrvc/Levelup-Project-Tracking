@@ -23,6 +23,7 @@ interface CarrierMappingConfig{
     vessel_flight: string;
     pickup_date: string;
     latest_cp: string;
+
 }
 
 
