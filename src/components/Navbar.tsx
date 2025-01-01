@@ -8,19 +8,15 @@ import { useNotifier } from "@/components/ui/use-notifications";
 import { usePathname } from "next/navigation";
 import UploadLink from "@/components/UploadLink";
 import Image from "next/image";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter, DialogDescription,
-} from "@/components/ui/dialog";
+import PopUp from "./PopUp";
 import { ThemeSwitcherBtn } from "@/components/ThemeSwitcherBtn";
+
 
 const Navbar = () => {
     const { notifySuccess } = useNotifier();
     const pathname = usePathname();
     const [isModalOpen, setModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const hiddenRoutes = ["/auth/login", "/auth/register"];
     if (hiddenRoutes.includes(pathname)) {
@@ -28,15 +24,16 @@ const Navbar = () => {
     }
 
     const handleLogout = () => {
+        setIsLoading(true);
         signOut({
             callbackUrl: "/auth/login",
         }).then(() => {
             notifySuccess("Success", "Logged out successfully!");
+            setIsLoading(false)
         });
     };
 
     const openModal = () => setModalOpen(true);
-    const closeModal = () => setModalOpen(false);
 
     return (
         <>
@@ -70,25 +67,15 @@ const Navbar = () => {
                     </div>
                 </div>
             </nav>
-            <Dialog open={isModalOpen} onOpenChange={setModalOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Are you sure you want to log out?</DialogTitle>
-                    </DialogHeader>
-                    <DialogDescription>
-                        This action cannot be undone.
-                        You will have to login again and will be redirected to login page.
-                    </DialogDescription>
-                    <DialogFooter>
-                        <Button variant="ghost" onClick={closeModal}>
-                            Cancel
-                        </Button>
-                        <Button variant="destructive" onClick={handleLogout}>
-                            Logout
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <PopUp open={isModalOpen}
+                   onOpenChange={setModalOpen}
+                   onClick1={handleLogout}
+                   textTitle={"Are you sure you want to log out?"}
+                   textDesc={"This action cannot be undone.\n" +
+                       "You will have to login again and will be redirected to login page."}
+                   btnfunction={"Confirm"}
+                   isLoading={isLoading}
+            />
         </>
     );
 };

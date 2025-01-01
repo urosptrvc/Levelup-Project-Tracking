@@ -4,19 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { shipments } from "@prisma/client";
 import { DataTableColumnHeader } from "@/components/table/DataTableColumnHeader";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {formatDate, formatCell} from "@/app/utils/formatters";
+import ActionsMenu from "@/components/DropDownMenu"
+
 
 export const columns: ColumnDef<shipments>[] = [
     {
@@ -111,39 +101,3 @@ export const columns: ColumnDef<shipments>[] = [
     },
 ];
 
-const ActionsMenu = ({ shipId }: { shipId: number }) => {
-    const router = useRouter();
-    const { data: session } = useSession();
-
-
-    const isAdmin = session?.user?.role === "admin";
-    const handleRowClick = (id: number) => {
-        router.push(`/shipments/${id}`);
-    };
-
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Properties</DropdownMenuLabel>
-                <DropdownMenuItem className="cursor-pointer" onClick={() => handleRowClick(shipId)}>
-                    View shipment details
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                {isAdmin && (
-                    <>
-                        <DropdownMenuItem className="cursor-pointer" >Update shipment</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600 cursor-pointer hover:bg-red-100">
-                            Delete shipment
-                        </DropdownMenuItem>
-                    </>
-                )}
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
-};
