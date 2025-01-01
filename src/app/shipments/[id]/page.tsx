@@ -1,17 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import DataTable from "@/components/DataTable";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {DataTable} from "@/components/table/DataTable";
+import {columns} from "@/app/shipments/[id]/columns";
 
 type Props = {
     params: {
         id: string;
     };
 };
-
-const columns = [
-    { key: "field", label: "Field" },
-    { key: "value", label: "Value" },
-];
 
 const ShipmentDetailPage = async ({ params }: Props) => {
     const { id } = await params;
@@ -27,29 +23,15 @@ const ShipmentDetailPage = async ({ params }: Props) => {
         );
     }
 
-    const data = Object.entries(shipment).map(([key, value]) => ({
-        field: formatKey(key),
-        value: String(value),
-    }));
-
     return (
         <div className="container mx-auto py-10">
             <h1 className="text-2xl font-bold mb-6">Shipment Details</h1>
             <ScrollArea className="h-[550px] rounded-md border p-4">
-                <DataTable
-                    data={data}
-                    columns={columns}
-                />
+                <DataTable data={[shipment]} columns={columns}/>
             </ScrollArea>
         </div>
     );
 };
 
-function formatKey(key: string): string {
-    return key
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, char => char.toUpperCase())
-        .replace(/Id\b/, "ID");
-}
 
 export default ShipmentDetailPage;

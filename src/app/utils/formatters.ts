@@ -1,11 +1,21 @@
-export function formatDate(date: Date | string | number): string {
-    if (!date) return "Not Defined";
+export function formatDate(date: Date | string | number | unknown): string {
+    // Provera za null, undefined, prazan string i druge falsy vrednosti
+    if (date === null || date === undefined || date === "") return "Not Defined";
 
-    const parsedDate = new Date(date);
-    if (isNaN(parsedDate.getTime())) {
-        return String(date).replace(/"/g, "");
+    // Provera da li je date tipa Date, string ili number
+    if (typeof date !== 'string' && typeof date !== 'number' && !(date instanceof Date)) {
+        return "Not Defined";
     }
 
+    // Konverzija u Date objekat
+    const parsedDate = new Date(date as Date | string | number);
+
+    // Provera da li je parsirani datum validan
+    if (isNaN(parsedDate.getTime())) {
+        return "Not Defined";
+    }
+
+    // Provera za specijalni slučaj "Self-Delivery"
     if (
         parsedDate.getFullYear() === 1900 &&
         parsedDate.getMonth() === 0 &&
@@ -14,10 +24,12 @@ export function formatDate(date: Date | string | number): string {
         return "Self-Delivery";
     }
 
+    // Formatiranje datuma
     const day = String(parsedDate.getUTCDate()).padStart(2, "0");
     const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
     const year = parsedDate.getUTCFullYear();
 
+    // Provera da li je vreme 00:00:00
     if (
         parsedDate.getUTCHours() === 0 &&
         parsedDate.getUTCMinutes() === 0 &&
@@ -31,15 +43,9 @@ export function formatDate(date: Date | string | number): string {
     }
 }
 
-export function formatValue(value: unknown): string {
-
-    if(value === Int)
-    if (typeof value === "string" || value instanceof Date) {
-        return formatDate(value);
-    }
-    if (typeof value === null) {
-        return "Not Defined";
-    }
-
-    return String(value);
+export function formatColumnId(columnId: string): string {
+    return columnId
+        .replace(/_/g, ' ')
+        .replace(/"/g, '')
+        .replace(/\b\w/g, (char) => char.toUpperCase());
 }

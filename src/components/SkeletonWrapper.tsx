@@ -3,15 +3,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 type Props = {
-    children?: React.ReactNode;
-    isLoading?: boolean;
-    rows?: number;
+    rows: number;
 };
 
-const SkeletonWrapper = ({ children, isLoading, rows }: Props) => {
-    if (!isLoading) {
-        return <>{children}</>;
-    }
+const SkeletonWrapper = ({ rows }: Props) => {
 
     return (
         <div>
