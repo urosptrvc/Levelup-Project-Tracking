@@ -2,8 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
-import AuthCard from "@/components/AuthCard";
-import AuthForm from "@/components/AuthForm";
+import AuthCard from "@/components/auth/AuthCard";
+import AuthForm from "@/components/auth/AuthForm";
 import { useNotifier } from "@/components/ui/use-notifications";
 import { useRouter } from "next/navigation";
 import LoadSpinner from "@/components/LoadSpinner";

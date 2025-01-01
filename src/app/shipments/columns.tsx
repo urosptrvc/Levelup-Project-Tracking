@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import {formatDate, formatColumnId} from "@/app/utils/formatters";
+import {formatDate, formatCell} from "@/app/utils/formatters";
 
 export const columns: ColumnDef<shipments>[] = [
     {
@@ -54,7 +54,7 @@ export const columns: ColumnDef<shipments>[] = [
         ),
         cell: ({ row }) => {
             const item = String(row.getValue("status"));
-            const formatted = formatColumnId(item);
+            const formatted = formatCell(item);
             return <div className="font-medium">{formatted}</div>;
         },
     },
@@ -65,7 +65,7 @@ export const columns: ColumnDef<shipments>[] = [
         ),
         cell: ({ row }) => {
             const item = String(row.getValue("shipper"));
-            const formatted = formatColumnId(item);
+            const formatted = formatCell(item);
             return <div className="font-medium">{formatted}</div>;
         },
     },
@@ -76,7 +76,7 @@ export const columns: ColumnDef<shipments>[] = [
         ),
         cell: ({ row }) => {
             const item = String(row.getValue("receiver"));
-            const formatted = formatColumnId(item);
+            const formatted = formatCell(item);
             return <div className="font-medium">{formatted}</div>;
         },
     },
@@ -87,7 +87,7 @@ export const columns: ColumnDef<shipments>[] = [
         ),
         cell: ({ row }) => {
             const item = String(row.getValue("receiver_country"));
-            const formatted = formatColumnId(item);
+            const formatted = formatCell(item);
             return <div className="font-medium">{formatted}</div>;
         },
     },

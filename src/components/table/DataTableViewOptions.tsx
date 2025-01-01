@@ -3,7 +3,7 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { Table } from "@tanstack/react-table"
 import { Settings2 } from "lucide-react"
-import {formatColumnId} from "@/app/utils/formatters"
+import {formatCell} from "@/app/utils/formatters"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -42,7 +42,7 @@ export function DataTableViewOptions<TData>({
                             typeof column.accessorFn !== "undefined" && column.getCanHide()
                     )
                     .map((column) => {
-                        const formattedText = formatColumnId(column.id);
+                        const formattedText = formatCell(column.id);
 
                         return (
                             <DropdownMenuCheckboxItem

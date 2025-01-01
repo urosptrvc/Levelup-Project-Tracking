@@ -40,7 +40,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="border-b shadow">
+            <nav className="border-b shadow sticky top-0 bg-inherit z-50">
                 <div className="container mx-auto flex items-center py-4 px-6">
 
                     <div className="flex items-center space-x-3 flex-1">

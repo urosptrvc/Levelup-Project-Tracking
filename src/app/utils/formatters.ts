@@ -43,7 +43,7 @@ export function formatDate(date: Date | string | number | unknown): string {
     }
 }
 
-export function formatColumnId(columnId: string): string {
+export function formatCell(columnId: string): string {
     return columnId
         .replace(/_/g, ' ')
         .replace(/"/g, '')
