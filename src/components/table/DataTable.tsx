@@ -23,7 +23,7 @@ import {
 import { useState } from "react";
 import { DataTableViewOptions } from "@/components/table/DataTableViewOptions";
 import {DataTablePagination} from "@/components/table/DataTablePagination";
-import SearchComp from "./SearchComp";
+import SearchComp from "../SearchComp";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]

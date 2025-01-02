@@ -35,11 +35,11 @@ export function formatDate(date: Date | string | number | unknown): string {
         parsedDate.getUTCMinutes() === 0 &&
         parsedDate.getUTCSeconds() === 0
     ) {
-        return `${day}.${month}.${year}`;
+        return `${year}-${month}-${day}`;
     } else {
         const hours = String(parsedDate.getUTCHours()).padStart(2, "0");
         const minutes = String(parsedDate.getUTCMinutes()).padStart(2, "0");
-        return `${day}.${month}.${year} ${hours}:${minutes}`;
+        return `${year}-${month}-${day} ${hours}:${minutes}`;
     }
 }
 
