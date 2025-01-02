@@ -66,8 +66,7 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
 
 ## Struktura projekta
 ```bash
-
-├── 📂 prisma <------- ORM za handlovanje database i entiteta
+├── 📂 prisma
 │   ├── 📂 migrations
 │   │   ├── 📂 20241213224749_change_id_to_string
 │   │   │   └── 📄 migration.sql
@@ -86,23 +85,18 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
 │   │   ├── 📂 20241227014838_typesupdates
 │   │   │   └── 📄 migration.sql
 │   │   ├── 📂 20241227015243_
-│   │   │   └── 📄 migration.sql <------- Izvsene ispravke nad bazom
-│   │   └── 📄 migration_lock.toml
+│   │   │   └── 📄 migration.sql
+│   │   └── 📄 migration_lock.toml <------- Izvsene ispravke nad bazom
 │   └── 📄 schema.prisma <------- Schema nase baze
-├── 📂 public
-│   ├── 📂 data <------- Data za testiranje
-│   │   ├── 📄 DHL.xlsx
-│   │   ├── 📄 DHL2.xlsx
-│   │   ├── 📄 hellmann.xlsx
-│   │   ├── 📄 hellmann2.xlsx
-│   │   └── 📄 logwin.xlsx
-│   ├── 📄 file.svg
-│   ├── 📄 globe.svg
-│   ├── 📄 next.svg
-│   ├── 📄 vercel.svg
-│   └── 📄 window.svg
+├── 📂 public <------- Data za testiranje uplaod i prikaz podataka
+│   └── 📂 data
+│       ├── 📄 DHL.xlsx
+│       ├── 📄 DHL2.xlsx
+│       ├── 📄 hellmann.xlsx
+│       ├── 📄 hellmann2.xlsx
+│       └── 📄 logwin.xlsx
 └── 📂 src
-    ├── 📂 app <------- Root folder nase aplikacije
+    ├── 📂 app <------- Root folder aplikacije
     │   ├── 📂 api
     │   │   ├── 📂 auth
     │   │   │   ├── 📂 register
@@ -110,59 +104,86 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │   │   │   └── 📂 [...nextauth]
     │   │   │       └── 📄 route.ts <------- NextAuth & Prisma login
     │   │   └── 📂 shipments
-    │   │       ├── 📄 route.ts <------- Backend Server Side za stranicu shipments
-    │   │       └── 📂 upload
-    │   │           └── 📄 route.ts <------- Backend Server Side za stranicu upload
+    │   │       ├── 📂 upload
+    │   │       │   └── 📄 route.ts <------- Backend za stranicu upload sa admin restrikcijom
+    │   │       └── 📂 [id]
+    │   │           └── 📄 route.ts <------- Backend Delete Shipment za stranicu pocetnu sa admin restrikcijom
     │   ├── 📂 auth
     │   │   ├── 📂 login
     │   │   │   └── 📄 page.tsx <------- Login stranica
     │   │   └── 📂 register
     │   │       └── 📄 page.tsx <------- Register stranica
-    │   ├── 📂 types
-    │   │   ├── 📄 carrierMappings.ts <------- Izbor tipa mapiranja
-    │   │   └── 📄 formatters.ts <------- Funkcija za display datuma i stringovanje
     │   ├── 📄 favicon.ico
-    │   ├── 📄 globals.css
-    │   ├── 📄 layout.tsx
+    │   ├── 📄 globals.css <------- Dark & Light theme konfigurisane ovde
+    │   ├── 📄 layout.tsx <------- Root layout
     │   ├── 📄 page.tsx
     │   ├── 📄 providers.tsx <------- NextAuth Session Provider
     │   ├── 📂 shipments
+    │   │   ├── 📄 columns.tsx <------- Mapiranje date prema ShadCn tabeli
+    │   │   ├── 📄 loading.tsx <------- Loading skeleton
     │   │   ├── 📄 page.tsx <------- Stranica shipments, pocetna
     │   │   ├── 📂 upload
-    │   │   │   └── 📄 page.tsx <------- Stranica upload, gde vrsimo upload 
+    │   │   │   └── 📄 page.tsx <------- Stranica upload
     │   │   └── 📂 [id]
-    │   │       ├── 📄 loading.tsx <------- Skeleton pri ucitavanju page.tsx
+    │   │       ├── 📄 columns.tsx <------- Mapiranje date po karticama i obradjivanje date
+    │   │       ├── 📄 loading.tsx <------- Loading skeleton
     │   │       └── 📄 page.tsx <------- Redirect stranica sa shipments
-    │   └── 📂 types
-    │       └── 📄 next-auth.d.ts <------- Prosireni interfejsi za auth zbog rola
+    │   ├── 📂 types
+    │   │   └── 📄 next-auth.d.ts <------- Prosireni interfejsi za auth zbog rola
+    │   └── 📂 utils
+    │       ├── 📄 carrierMappings.ts <------- Izbor tipa mapiranja
+    │       └── 📄 formatters.ts <------- Funkcije za display datuma i stringovanje
     ├── 📂 components
-    │   ├── 📄 AuthCard.tsx <------- Komponenta za card login/register
-    │   ├── 📄 AuthForm.tsx <------- Komponenta za polja login/register
+    │   ├── 📂 auth
+    │   │   ├── 📄 AuthCard.tsx <------- Komponenta za card login/register
+    │   │   └── 📄 AuthForm.tsx <------- Komponenta za polja login/register
+    │   ├── 📄 DropDownMenu.tsx <------- Komponenta za Properties (ViewShipmentDetails & DeleteShipment)
+    │   ├── 📄 LoadSpinner.tsx <------- Komponenta za loading krug
     │   ├── 📄 Navbar.tsx <------- Komponenta za navbar
+    │   ├── 📄 PopUp.tsx <------- Komponenta modal tipa
+    │   ├── 📄 SearchComp.tsx <------- Komponenta za pretragu query
+    │   ├── 📂 shipdetails
+    │   │   ├── 📄 InfoCard.tsx <------- Komponenta card tipa za prikaz polja sa ikonicama na ship details stranici
+    │   │   ├── 📄 ShipmentHeader.tsx <------- Komponenta za header ship details stranice
+    │   │   └── 📄 ShipmentTimeline.tsx <------- Komponenta za prikaz vremenskih desavanja
     │   ├── 📄 SkeletonWrapper.tsx <------- Komponenta za skeletone
-    │   ├── 📄 DataTable.tsx <------- Komponenta za prikazivanje tabela
-    │   ├── 📄 PaginationComponent.tsx <------- Komponenta za paginaciju
+    │   ├── 📂 table
+    │   │   ├── 📄 DataTable.tsx <------- Komponenta za prikazivanje body tabela
+    │   │   ├── 📄 DataTableColumnHeader.tsx <------- Komponenta za prikazivanje head tabela
+    │   │   ├── 📄 DataTablePagination.tsx <------- Komponenta za paginaciju tabela
+    │   │   └── 📄 DataTableViewOptions.tsx <------- Komponenta za filtriranje kolona tabela
+    │   ├── 📄 ThemeSwitcherBtn.tsx <------- Komponenta menjanje dark/system/light theme
     │   ├── 📄 UploadLink.tsx <------- Komponenta za upload admin/user role
-    │   ├── 📄 ThemeSwitcherBtn.tsx <------- Dropdown komponenta za switch theme
-    │   ├── 📄 LoadSpinner.tsx <------- Loading animacija
-    │   ├── 📂 ui <------- Shadcn/ui komponente
-    │   │   ├── 📄 button.tsx
-    │   │   ├── 📄 card.tsx
-    │   │   ├── 📄 dialog.tsx
-    │   │   ├── 📄 input.tsx
-    │   │   ├── 📄 pagination.tsx
-    │   │   ├── 📄 select.tsx
-    │   │   ├── 📄 skeleton.tsx
-    │   │   ├── 📄 table.tsx
-    │   │   ├── 📄 toast.tsx
-    │   │   ├── 📄 toaster.tsx
-    │   │   ├── 📄 use-notifications.ts
-    │   │   └── 📄 use-toast.ts
+    │   └── 📂 ui <------- Shadcn/ui komponente
+    │       ├── 📄 accordion.tsx
+    │       ├── 📄 alert-dialog.tsx
+    │       ├── 📄 alert.tsx
+    │       ├── 📄 aspect-ratio.tsx
+    │       ├── 📄 avatar.tsx
+    │       ├── 📄 badge.tsx
+    │       ├── 📄 breadcrumb.tsx
+    │       ├── 📄 button.tsx
+    │       ├── 📄 card.tsx
+    │       ├── 📄 checkbox.tsx
+    │       ├── 📄 dialog.tsx
+    │       ├── 📄 dropdown-menu.tsx
+    │       ├── 📄 input.tsx
+    │       ├── 📄 label.tsx
+    │       ├── 📄 pagination.tsx
+    │       ├── 📄 scroll-area.tsx
+    │       ├── 📄 select.tsx
+    │       ├── 📄 separator.tsx
+    │       ├── 📄 skeleton.tsx
+    │       ├── 📄 table.tsx
+    │       ├── 📄 toast.tsx
+    │       ├── 📄 toaster.tsx
+    │       ├── 📄 use-notifications.ts
+    │       └── 📄 use-toast.ts
     ├── 📂 lib
     │   ├── 📄 prisma.ts <------- Prisma Client util
-    │   ├── 📄 action.ts <------- Search prisma getmany util
+    │   ├── 📄 action.ts <------- Search prisma findmany util
     │   └── 📄 utils.ts <------- Shadcn util
-    └── 📄 middleware.ts <------- Blokator stranica bez auth-a
+    └── 📄 middleware.ts <------- Blokator stranica bez auth-a i autorizacija
 
 Total directories 📂: 36
 Total files 📄: 87
