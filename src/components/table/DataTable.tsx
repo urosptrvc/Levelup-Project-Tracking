@@ -22,12 +22,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { DataTableViewOptions } from "@/components/table/DataTableViewOptions";
-import {DataTablePagination} from "@/components/table/DataTablePagination";
+import { DataTablePagination } from "@/components/table/DataTablePagination";
 import SearchComp from "../SearchComp";
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
 
 export function DataTable<TData, TValue>({
@@ -38,7 +38,6 @@ export function DataTable<TData, TValue>({
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
         {}
     );
-    const [rowSelection, setRowSelection] = useState({})
 
     const table = useReactTable({
         data,
@@ -46,7 +45,6 @@ export function DataTable<TData, TValue>({
         state: {
             sorting,
             columnVisibility,
-            rowSelection,
         },
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -54,19 +52,18 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
     });
 
     return (
         <div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center py-4">
-                    <SearchComp placeholder="Search..."/>
+                    <SearchComp placeholder="Search..." />
                     <p className="w-full pl-4 whitespace-nowrap opacity-20">
                         Date search must be in format YYYY-MM-DD
                     </p>
                 </div>
-                <DataTableViewOptions table={table}/>
+                <DataTableViewOptions table={table} />
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -91,10 +88,7 @@ export function DataTable<TData, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
+                                <TableRow key={row.id}>
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
