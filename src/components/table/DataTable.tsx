@@ -61,8 +61,8 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center py-4">
-                    <SearchComp placeholder="Search all columns.."/>
-                    <p className="w-full text-opacity-50 pl-4 whitespace-nowrap">
+                    <SearchComp placeholder="Search..."/>
+                    <p className="w-full pl-4 whitespace-nowrap opacity-20">
                         Date search must be in format YYYY-MM-DD
                     </p>
                 </div>

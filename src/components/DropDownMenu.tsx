@@ -44,11 +44,11 @@ const ActionsMenu = ({ shipId }: { shipId: number }) => {
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["shipments"] });
             notifySuccess("Success", "Shipment deleted successfully");
+            setIsModalOpen(false);
             router.refresh();
         },
-        onError: (error: unknown) => {
-            notifyError("Error", "Failed to delete shipment");
-            console.error("Delete shipment error:", error);
+        onError: (error) => {
+            notifyError("Error", `Failed to delete shipment ${error.message}`);
         },
     });
 
@@ -73,7 +73,7 @@ const ActionsMenu = ({ shipId }: { shipId: number }) => {
                     {isAdmin && (
                         <>
                             <DropdownMenuItem
-                                className="text-red-600 cursor-pointer hover:bg-red-100"
+                                className="text-red-600 cursor-pointer "
                                 onClick={() => {
                                     setIsDropdownOpen(false);
                                     setIsModalOpen(true);

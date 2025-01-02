@@ -160,11 +160,12 @@ U public folderu se nalazi data folder sa neophodnih .xlsx fajlovima za testiran
     │   │   └── 📄 use-toast.ts
     ├── 📂 lib
     │   ├── 📄 prisma.ts <------- Prisma Client util
+    │   ├── 📄 action.ts <------- Search prisma getmany util
     │   └── 📄 utils.ts <------- Shadcn util
     └── 📄 middleware.ts <------- Blokator stranica bez auth-a
 
-Total directories 📂: 32
-Total files 📄: 61
+Total directories 📂: 36
+Total files 📄: 87
 
 File extensions count:
 .sql : 9
@@ -172,8 +173,8 @@ File extensions count:
 .prisma : 1
 .xlsx : 5
 .svg : 5
-.ts : 11
-.tsx : 27
+.ts : 13
+.tsx : 51
 .ico : 1
 .css : 1
 ```

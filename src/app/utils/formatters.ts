@@ -43,9 +43,15 @@ export function formatDate(date: Date | string | number | unknown): string {
     }
 }
 
-export function formatCell(columnId: string): string {
-    return columnId
+export function formatCell(data: string): string {
+    if (data === null || data === undefined || data == "") return "Not Defined";
+    return data
         .replace(/_/g, ' ')
         .replace(/"/g, '')
         .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export function formatNull(data: unknown):string{
+    if (data === null || data === undefined || data == "") return "Not Defined";
+    return data.toString()
 }

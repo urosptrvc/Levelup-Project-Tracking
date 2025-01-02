@@ -69,7 +69,11 @@ const UploadShipmentsPage = () => {
                             {/* Drag & drop funkcionalnosti */}
                             <label
                                 htmlFor="file"
-                                className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-200 transition"
+                                className="flex flex-col items-center
+                                justify-center w-full p-4 border-2
+                                border-dashed rounded-lg cursor-pointer
+                                transition hover:bg-accent hover:border-accent-foreground/20
+                                border-border bg-background text-foreground"
                             >
                                 <CloudUpload className="w-8 h-8  mb-2"/>
                                 <span className="text-sm">
@@ -85,29 +89,29 @@ const UploadShipmentsPage = () => {
                                 />
                             </label>
                             <LoadSpinner isLoading={isLoading}>
-                            {/* Prikaz selektovanog fajla*/}
-                            {file && (
-                                <div className="flex items-center justify-between w-full px-2 py-1 rounded-md">
-                                    <div className="flex items-center space-x-2">
-                                        <FileText className=""/>
-                                        <span className="text-sm ">{file.name}</span>
+                                {/* Prikaz selektovanog fajla*/}
+                                {file && (
+                                    <div className="flex items-center justify-between w-full px-2 py-1 rounded-md">
+                                        <div className="flex items-center space-x-2">
+                                            <FileText className=""/>
+                                            <span className="text-sm ">{file.name}</span>
+                                        </div>
+                                        <button
+                                            onClick={() => setFile(null)}
+                                            className="text-red-600 hover:text-red-800"
+                                        >
+                                            <XCircle size={18}/>
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => setFile(null)}
-                                        className="text-red-600 hover:text-red-800"
-                                    >
-                                        <XCircle size={18}/>
-                                    </button>
-                                </div>
-                            )}
+                                )}
 
-                            {/* Dugme za dinamicki upload*/}
-                            <Button
-                                onClick={uploadFile}
-                                disabled={!file || isLoading}
-                                className="w-full"
-                            > Upload & Process
-                            </Button>
+                                {/* Dugme za dinamicki upload*/}
+                                <Button
+                                    onClick={uploadFile}
+                                    disabled={!file || isLoading}
+                                    className="w-full"
+                                > Upload & Process
+                                </Button>
                             </LoadSpinner>
                         </div>
                     </CardContent>

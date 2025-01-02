@@ -1,3 +1,5 @@
+// components/Navbar.tsx
+
 "use client";
 
 import React, { useState } from "react";
@@ -11,9 +13,8 @@ import Image from "next/image";
 import PopUp from "./PopUp";
 import { ThemeSwitcherBtn } from "@/components/ThemeSwitcherBtn";
 
-
 const Navbar = () => {
-    const { notifySuccess } = useNotifier();
+    const { notifySuccess, notifyError } = useNotifier();
     const pathname = usePathname();
     const [isModalOpen, setModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -23,14 +24,21 @@ const Navbar = () => {
         return null;
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setIsLoading(true);
-        signOut({
-            callbackUrl: "/auth/login",
-        }).then(() => {
+        try {
+            await signOut({
+                callbackUrl: "/auth/login",
+                redirect: true,
+            });
             notifySuccess("Success", "Logged out successfully!");
-            setIsLoading(false)
-        });
+            setModalOpen(false);
+        } catch (error) {
+            notifyError("Error", "Failed to log out.");
+            console.error("Logout error:", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const openModal = () => setModalOpen(true);
@@ -41,14 +49,14 @@ const Navbar = () => {
                 <div className="container mx-auto flex items-center py-4 px-6">
 
                     <div className="flex items-center space-x-3 flex-1">
-                        <ThemeSwitcherBtn/>
+                        <ThemeSwitcherBtn />
                         <span className="text-sm">Change Theme</span>
                     </div>
 
                     <div className="flex justify-center items-center flex-1">
                         <Link href="/shipments" legacyBehavior>
                             <a className="flex flex-col items-center hover:opacity-90 transition-opacity">
-                                <Image src="/favicon.ico" alt="Logo" width={50} height={50}/>
+                                <Image src="/favicon.ico" alt="Logo" width={50} height={50} />
                                 <h1 className="text-xl font-bold mt-2">The Track Meister</h1>
                             </a>
                         </Link>
@@ -60,21 +68,22 @@ const Navbar = () => {
                                 Overview
                             </Button>
                         </Link>
-                        <UploadLink/>
+                        <UploadLink />
                         <Button variant="destructive" onClick={openModal}>
                             Logout
                         </Button>
                     </div>
                 </div>
             </nav>
-            <PopUp open={isModalOpen}
-                   onOpenChange={setModalOpen}
-                   onClick1={handleLogout}
-                   textTitle={"Are you sure you want to log out?"}
-                   textDesc={"This action cannot be undone.\n" +
-                       "You will have to login again and will be redirected to login page."}
-                   btnfunction={"Confirm"}
-                   isLoading={isLoading}
+            <PopUp
+                open={isModalOpen}
+                onOpenChange={setModalOpen}
+                onClick1={handleLogout}
+                textTitle="Are you sure you want to log out?"
+                textDesc={`This action cannot be undone.
+                You will have to login again and will be redirected to login page.`}
+                btnfunction="Confirm"
+                isLoading={isLoading}
             />
         </>
     );

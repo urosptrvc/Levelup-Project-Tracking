@@ -29,6 +29,10 @@ const PopUp = ({
                    btnfunction,
                    isLoading,
                }: Props) => {
+    const handleDestructiveClick = () => {
+        onClick1();
+    };
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
@@ -41,15 +45,13 @@ const PopUp = ({
                         <Button
                             variant="ghost"
                             onClick={() => onOpenChange(false)}
+                            disabled={isLoading}
                         >
                             Cancel
                         </Button>
                         <Button
                             variant="destructive"
-                            onClick={() => {
-                                onClick1();
-                                onOpenChange(false);
-                            }}
+                            onClick={handleDestructiveClick}
                             disabled={isLoading}
                         >
                             {btnfunction}

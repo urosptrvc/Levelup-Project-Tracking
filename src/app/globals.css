@@ -4,15 +4,15 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-start-rgb: 255, 253, 240;
+  --background-end-rgb: 255, 250, 230;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 40, 40, 40; /* Tamno siva */
-    --background-end-rgb: 60, 60, 60;   /* Svetlije tamno siva */
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 30, 41, 59;
   }
 }
 
@@ -24,51 +24,63 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --background: 60 100% 97%;
+    --foreground: 40 10% 3.9%;
+    --card: 60 100% 98%;
+    --card-foreground: 40 10% 3.9%;
+    --popover: 60 100% 98%;
+    --popover-foreground: 40 10% 3.9%;
+    --primary: 40 95% 50%;
+    --primary-foreground: 60 10% 98%;
+    --secondary: 60 40% 96%;
+    --secondary-foreground: 40 10% 10%;
+    --muted: 60 40% 96%;
+    --muted-foreground: 40 3.8% 46.1%;
+    --accent: 60 40% 96%;
+    --accent-foreground: 40 10% 10%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --destructive-foreground: 60 10% 98%;
+    --border: 40 5.9% 90%;
+    --input: 40 5.9% 90%;
+    --ring: 40 10% 3.9%;
     --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 60 100% 98%;
+    --sidebar-foreground: 40 5.3% 26.1%;
+    --sidebar-primary: 40 95% 50%;
+    --sidebar-primary-foreground: 60 10% 98%;
+    --sidebar-accent: 60 40% 96%;
+    --sidebar-accent-foreground: 40 10% 10%;
+    --sidebar-border: 40 13% 91%;
+    --sidebar-ring: 40 91.2% 59.8%;
   }
   .dark {
-    --background: 0 0% 15%; /* Tamno siva */
-    --foreground: 0 0% 98%;
-    --card: 0 0% 20%;       /* Svetlija tamna siva */
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 20%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 240 5.9% 25%; /* Tamno plava kao akcenat */
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 30%;  /* Još svetlija siva */
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 240 5% 70%;
-    --border: 0 0% 25%;    /* Tamna siva za border */
-    --input: 0 0% 25%;
-    --ring: 240 4.9% 83.9%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 15%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 15%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 32% 25%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 32% 20%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 91% 60%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 32% 25%;
+    --input: 217 32% 25%;
+    --ring: 224 76% 48%;
+    --sidebar-background: 222 47% 13%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 32% 25%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 32% 25%;
+    --sidebar-ring: 224 76% 48%;
   }
 }
 
@@ -80,3 +92,4 @@
     @apply bg-background text-foreground;
   }
 }
+

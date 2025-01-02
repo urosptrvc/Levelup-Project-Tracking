@@ -1,28 +1,39 @@
-import { Table } from "@tanstack/react-table"
+import { Table } from "@tanstack/react-table";
 import {
     ChevronLeft,
     ChevronRight,
     ChevronsLeft,
     ChevronsRight,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 interface DataTablePaginationProps<TData> {
-    table: Table<TData>
+    table: Table<TData>;
 }
 
 export function DataTablePagination<TData>({
                                                table,
                                            }: DataTablePaginationProps<TData>) {
+    const [pageInput, setPageInput] = useState("");
+
     const totalRows = table.getCoreRowModel().rows.length;
+
+    const handlePageChange = () => {
+        const pageIndex = Number(pageInput) - 1;
+        if (!isNaN(pageIndex) && pageIndex >= 0 && pageIndex < table.getPageCount()) {
+            table.setPageIndex(pageIndex);
+        }
+    };
 
     return (
         <div className="flex items-center justify-between px-2">
@@ -82,6 +93,16 @@ export function DataTablePagination<TData>({
                         <span className="sr-only">Go to previous page</span>
                         <ChevronLeft />
                     </Button>
+                    <Input
+                        type="text"
+                        className="h-8 w-20 border rounded text-center"
+                        value={pageInput}
+                        onChange={(e) => setPageInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handlePageChange();
+                        }}
+                        placeholder={`Page ${table.getState().pagination.pageIndex + 1}`}
+                    />
                     <Button
                         variant="outline"
                         className="h-8 w-8 p-0"
@@ -103,5 +124,5 @@ export function DataTablePagination<TData>({
                 </div>
             </div>
         </div>
-    )
+    );
 }

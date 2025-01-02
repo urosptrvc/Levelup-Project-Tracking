@@ -1,31 +1,31 @@
 import { Plane, Package, User, MapPin, FileText, Scale, Box } from 'lucide-react'
-import {formatCell,formatDate} from "@/app/utils/formatters";
+import {formatCell, formatDate, formatNull} from "@/app/utils/formatters";
 import {shipments} from "@prisma/client";
 
 const Columns = (shipment: shipments) => {
     const shipmentInfo = [
-        { icon: FileText, label: "PO Number", value: formatCell(String(shipment.po_number)) },
-        { icon: Package, label: "Packages", value: formatCell(String(shipment.packages)) },
-        { icon: Scale, label: "Weight", value: formatCell(String(shipment.weight)) },
-        { icon: Box, label: "Volume", value: formatCell(String(shipment.volume)) },
+        { icon: FileText, label: "PO Number", value: formatCell(formatNull(shipment.po_number)) },
+        { icon: Package, label: "Packages", value: formatCell(formatNull(shipment.packages)) },
+        { icon: Scale, label: "Weight", value: formatCell(formatNull(shipment.weight)) },
+        { icon: Box, label: "Volume", value: formatCell(formatNull(shipment.volume)) },
     ];
 
     const shippingDetails = [
-        { icon: FileText, label: "House AWB", value: formatCell(String(shipment.house_awb)) },
-        { icon: FileText, label: "Shipper Ref. No", value: formatCell(String(shipment.shipper_ref_no)) },
-        { icon: Plane, label: "Carrier", value: formatCell(String(shipment.carrier)) },
-        { icon: FileText, label: "Inco Term", value: formatCell(String(shipment.inco_term)) },
-        { icon: Plane, label: "Vessel Flight", value: formatCell(String(shipment.vessel_flight)) },
+        { icon: FileText, label: "House AWB", value: formatCell(formatNull(shipment.house_awb)) },
+        { icon: FileText, label: "Shipper Ref. No", value: formatCell(formatNull(shipment.shipper_ref_no)) },
+        { icon: Plane, label: "Carrier", value: formatCell(formatNull(shipment.carrier)) },
+        { icon: FileText, label: "Inco Term", value: formatCell(formatNull(shipment.inco_term)) },
+        { icon: Plane, label: "Vessel Flight", value: formatCell(formatNull(shipment.vessel_flight)) },
     ];
 
     const shipperInfo = [
-        { icon: User, label: "Shipper", value: formatCell(String(shipment.shipper)) },
-        { icon: MapPin, label: "Country", value: formatCell(String(shipment.shipper_country)) },
+        { icon: User, label: "Shipper", value: formatCell(formatNull(shipment.shipper)) },
+        { icon: MapPin, label: "Country", value: formatCell(formatNull(shipment.shipper_country)) },
     ];
 
     const receiverInfo = [
-        { icon: User, label: "Receiver", value: formatCell(String(shipment.receiver)) },
-        { icon: MapPin, label: "Country", value: formatCell(String(shipment.receiver_country)) },
+        { icon: User, label: "Receiver", value: formatCell(formatNull(shipment.receiver)) },
+        { icon: MapPin, label: "Country", value: formatCell(formatNull(shipment.receiver_country)) },
     ];
 
     const timelineItems = [
